@@ -1,0 +1,33 @@
+typedef struct
+{
+    char *nome;
+    int primeiraPosicao;
+    int ultimaPosicao;
+} bikes;
+
+typedef struct
+{
+    char nome_bicicleta[100];
+    char data_atividade[100];
+    char nome_arquivo[100];
+    float distancia;
+    float velocidadeMaxima;
+    float velocidadeMedia;
+    float heartRateMedio;
+    float heartRateMaximo;
+    float cadenciaMedia;
+    float subidaAcumulada;
+} logs;
+
+void ordenaVetorLogs(logs *vetor, int tamanho);
+void ordenaAtividadesBicicletaPorData(logs *vetor, int tamIni, int tamFim);
+void ordenaAtividadesBicicletaPorDistancia(logs *vetor, int tamIni, int tamFim);
+void ordenaAtividadesBicicletaPorSubidaAcumulada(logs *vetor, int tamIni, int tamFim);
+void inicializaVetorLogs(logs *vetorLogsGeral, int tamanhoVetor);
+bikes *preencheVetorBikes(logs *vetorLogsGeral, int tamVetLogs, int *qntBikes);
+int funcaoModeloBikeSwitchCase(bikes *vetBikes, int qntBikes);
+void printaSumario(logs* vetorLogsGeral, int qntLogs);
+void printaVetorLogs(logs *vetorLogsGeral, int qntLogs);
+void printAgrupadoPorBicicleta(logs *vetorLogsGeral, int tamIni, int tamFim);
+void printaHistogramaPorBike(logs *vetorLogsGeral, int tamIni, int tamFim);
+void printaNomesBikes(bikes *vetBikes, int qntBikes);
