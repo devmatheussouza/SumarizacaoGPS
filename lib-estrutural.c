@@ -27,62 +27,62 @@ void ordenaVetorLogs(logs *vetor, int tamanho)
 
 void ordenaAtividadesBicicletaPorData(logs* vetor, int tamIni, int tamFim)
 {
-    int i, continua;
+    int i, continuaOrdenacao;
     logs aux;
 
     do
     {
-        continua = 0;
+        continuaOrdenacao = 0;
         for(i=tamIni; i<tamFim-1; i++){
             if(strcmp(vetor[i].data_atividade, vetor[i+1].data_atividade) > 0){
                 aux = vetor[i];
                 vetor[i] = vetor[i+1];
                 vetor[i+1] = aux;
-                continua = i;
+                continuaOrdenacao = i;
             }
         }
         tamFim--;
-    } while (continua != 0);
+    } while (continuaOrdenacao != 0);
 }
 
 void ordenaAtividadesBicicletaPorDistancia(logs* vetor, int tamIni, int tamFim)
 {
-    int i, continua;
+    int i, continuaOrdenacao;
     logs aux;
 
     do
     {
-        continua = 0;
+        continuaOrdenacao = 0;
         for(i=tamIni; i<tamFim-1; i++){
             if(vetor[i].distancia > vetor[i+1].distancia){
                 aux = vetor[i];
                 vetor[i] = vetor[i+1];
                 vetor[i+1] = aux;
-                continua = i;
+                continuaOrdenacao = i;
             }
         }
         tamFim--;
-    } while (continua != 0);
+    } while (continuaOrdenacao != 0);
 }
 
 void ordenaAtividadesBicicletaPorSubidaAcumulada(logs* vetor, int tamIni, int tamFim)
 {
-    int i, continua;
+    int i, continuaOrdenacao;
     logs aux;
 
     do
     {
-        continua = 0;
+        continuaOrdenacao = 0;
         for(i=tamIni; i<tamFim-1; i++){
             if(vetor[i].subidaAcumulada > vetor[i+1].subidaAcumulada){
                 aux = vetor[i];
                 vetor[i] = vetor[i+1];
                 vetor[i+1] = aux;
-                continua = i;
+                continuaOrdenacao = i;
             }
         }
         tamFim--;
-    } while (continua != 0);
+    } while (continuaOrdenacao != 0);
 }
 
 void inicializaVetorLogs(logs *vetorLogsGeral, int tamanhoVetor)
@@ -108,6 +108,7 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
     *qntBikes = 1;
     bikes* bicicletas = malloc(sizeof(bikes)*tamInicial);
 
+    // Inicializa vetor de bikes;
     for(i=0; i<tamInicial; i++){
         bicicletas[i].nome = malloc(sizeof(char) * 100);
         strcpy(bicicletas[i].nome, "z");
@@ -119,8 +120,9 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
     bicicletas[0].primeiraPosicao = 0;
     bicicletas[0].ultimaPosicao = 0;
 
-    i=0;
-    j=0;
+    i=0, j=0;
+    /* Verifica quantas bikes têm no vetor de logs e preenche o vetor de bikes com nome e 
+        posicão inicial e final (no vetor de logs) de determinada bicicleta */
     while(i < tamVetLogs){
         if(strcmp(bicicletas[j].nome, vetorLogsGeral[i].nome_bicicleta) != 0 && strcmp(vetorLogsGeral[i].nome_bicicleta, "z") != 0){
             bicicletas[j].ultimaPosicao = i;
@@ -224,6 +226,7 @@ int funcaoModeloBikeSwitchCase(bikes* vetBikes, int qntBikes)
     printf("Qual modelo? \n");
     printf("\n");
     for(i=0; i<qntBikes; i++){
+        // Verifica se tem '\n' como último char; Se tiver, retira;
         if(strchr(vetBikes[i].nome, '\n') != NULL){
             vetBikes[i].nome[strlen(vetBikes[i].nome) - 1] = 0;
         }
@@ -244,9 +247,12 @@ int funcaoModeloBikeSwitchCase(bikes* vetBikes, int qntBikes)
 void printaHistogramaPorBike(logs *vetorLogsGeral, int tamIni, int tamFim)
 {
     int menorDistLog, menorDistHist, maiorDistLog, maiorDistHist, i;
+    // Pega-se a menor e a maior distância e faz-se um casting para adotar um intervalo de inteiros;
     menorDistLog = (int) vetorLogsGeral[tamIni].distancia;
-    menorDistHist = menorDistLog - (menorDistLog % 10);
     maiorDistLog = (int) vetorLogsGeral[tamFim-1].distancia;
+    /* Subtrai-se o último dígito para adotar um intervalo de 10 em 10; 
+        Exemplo: menorDistLog = 125, entao menorDistHist = 120; */
+    menorDistHist = menorDistLog - (menorDistLog % 10);
     maiorDistHist = maiorDistLog - (maiorDistLog % 10);
 
     printf("Bicicleta: %s\n", vetorLogsGeral[tamIni].nome_bicicleta);

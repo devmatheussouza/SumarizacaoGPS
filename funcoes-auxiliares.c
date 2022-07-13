@@ -8,6 +8,7 @@
 #include <strings.h>
 #include "funcoes-auxiliares.h"
 
+// Verifica se entrada é um diretório ou não;
 int isDir(const char *fileName)
 {
     struct stat path;
@@ -26,6 +27,7 @@ int diferencaEntreDoisTimestamps(char *timestampAnterior, char *timestampAtual)
     return tempoAtual - tempoAnterior;
 }
 
+// Percorre um diretório para saber quantidade de itens;
 int verificaQntArquivosEmDiretorio(DIR *dirStream, char *caminhoDiretorio)
 {
     int qntFiles = 0;

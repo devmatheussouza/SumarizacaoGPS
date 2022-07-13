@@ -59,13 +59,15 @@ int main(int argc, char **argv)
 
     i = 0;
     for (;;){
-        if (!(dirEntry = readdir(dirStream)))
-            break;
+        // Se não tiver mais entradas, break;
+        if (!(dirEntry = readdir(dirStream))) break;
 
         strcpy(caminhoMaisNomeArquivo, caminho);
         strcpy(nomeDoArquivo, dirEntry->d_name);
+        // Concatena caminho do diretório com o nome do arquivo;
         strcat(caminhoMaisNomeArquivo, nomeDoArquivo);
 
+        // Se for arquivo, entra no escopo do if;
         if (isDir(caminhoMaisNomeArquivo) != 0){
             arq = fopen(caminhoMaisNomeArquivo, "r");
             if (!arq){
@@ -78,12 +80,8 @@ int main(int argc, char **argv)
             strcpy(timestampAnterior, "z");
             primeiraDist = 0;
             altitudeAnterior = 0;
-            qntV = 0;
-            qntHR = 0;
-            qntCD = 0;
-            somaHR = 0;
-            somaV = 0;
-            somaCD = 0;
+            qntV = 0, qntHR = 0, qntCD = 0;
+            somaHR = 0, somaV = 0, somaCD = 0;
             resCD = -1, resCD_At = 0;
             resHR = -1, resHR_At = 0;
             resV = -1, resV_At = 0;
@@ -97,11 +95,14 @@ int main(int argc, char **argv)
                     continue;
                 }
 
+                /* Se passar da parte do Gear sem ter atribuído o nome da bike,
+                    é realizado um break, pois não é um arquivo de log */
                 if (strcmp(vetorLogsGeral[i].nome_bicicleta, "z") == 0){
                     qntLogs--;
                     break;
                 }
 
+                /* Cópia do primeiro horário do arquivo de log */
                 if (strcmp(ptr_string, "Date") == 0 && strcmp(vetorLogsGeral[i].data_atividade, "z") == 0){
                     ptr_string = strtok(NULL, " ");
                     ptr_string = strtok(NULL, " ");
@@ -111,6 +112,7 @@ int main(int argc, char **argv)
                     continue;
                 }
 
+                // Atribuição da primeira altitude
                 if (strcmp(ptr_string, "altitude") == 0 && altitudeAnterior < 0.1){
                     ptr_string = strtok(NULL, " ");
                     resultado = atof(ptr_string);
@@ -127,6 +129,7 @@ int main(int argc, char **argv)
                     continue;
                 }
 
+                // Atribuição da primeira cadência
                 if (strcmp(ptr_string, "cadence") == 0 && resCD < 0){
                     ptr_string = strtok(NULL, " ");
                     if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0)
@@ -145,6 +148,7 @@ int main(int argc, char **argv)
                     continue;
                 }
 
+                // Atribuição da primeira distância
                 if (strcmp(ptr_string, "distance") == 0 && primeiraDist < 0.1){
                     ptr_string = strtok(NULL, " ");
                     primeiraDist = atof(ptr_string);
@@ -157,6 +161,7 @@ int main(int argc, char **argv)
                     continue;
                 }
 
+                // Atribuição do primeiro HR
                 if (strcmp(ptr_string, "heart_rate") == 0 && resHR < 0){
                     ptr_string = strtok(NULL, " ");
                     if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0)
@@ -181,6 +186,7 @@ int main(int argc, char **argv)
                     continue;
                 }
 
+                // Atribuição da primeira velocidade
                 if (strcmp(ptr_string, "speed") == 0 && resV < 0){
                     ptr_string = strtok(NULL, " ");
                     if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0){
@@ -205,11 +211,13 @@ int main(int argc, char **argv)
                     continue;
                 }
 
+                // Cópia da data do log
                 if (strcmp(ptr_string, "timestamp") == 0 && (strcmp(vetorLogsGeral[i].data_atividade, "z") == 0)){
                     ptr_string = strtok(NULL, " ");
                     strcpy(vetorLogsGeral[i].data_atividade, ptr_string);
                     continue;
                 }
+
 
                 if (strcmp(ptr_string, "timestamp") == 0){
                     ptr_string = strtok(NULL, " ");
@@ -244,16 +252,12 @@ int main(int argc, char **argv)
                     resCD = resCD_At;
                     resHR = resHR_At;
                     resV = resV_At;
-                    continue;
                 }
             }
 
-            if (qntV > 0)
-                vetorLogsGeral[i].velocidadeMedia = somaV / qntV;
-            if (qntHR > 0)
-                vetorLogsGeral[i].heartRateMedio = somaHR / qntHR;
-            if (qntCD > 0)
-                vetorLogsGeral[i].cadenciaMedia = somaCD / qntCD;
+            if (qntV > 0) vetorLogsGeral[i].velocidadeMedia = somaV / qntV;
+            if (qntHR > 0) vetorLogsGeral[i].heartRateMedio = somaHR / qntHR;
+            if (qntCD > 0) vetorLogsGeral[i].cadenciaMedia = somaCD / qntCD;
 
             vetorLogsGeral[i].distancia -= primeiraDist;
             vetorLogsGeral[i].distancia = vetorLogsGeral[i].distancia / 1000;
@@ -264,8 +268,6 @@ int main(int argc, char **argv)
     }
 
     ordenaVetorLogs(vetorLogsGeral, qntLogs);
-
-    // printf("QUANTIDADE DE LOGS: %d\n", qntLogs);
 
     printaSumario(vetorLogsGeral, qntLogs);
 
