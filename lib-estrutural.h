@@ -26,7 +26,7 @@ void ordenaAtividadesBicicletaPorSubidaAcumulada(logs *vetor, int tamIni, int ta
 void inicializaVetorLogs(logs *vetorLogsGeral, int tamanhoVetor);
 bikes *preencheVetorBikes(logs *vetorLogsGeral, int tamVetLogs, int *qntBikes);
 int funcaoModeloBikeSwitchCase(bikes *vetBikes, int qntBikes);
-void printaSumario(logs* vetorLogsGeral, int qntLogs);
+void printaSumarioPorBicicleta(logs* vetorLogsGeral, int posInicial, int posFim);
 void printaVetorLogs(logs *vetorLogsGeral, int qntLogs);
 void printAgrupadoPorBicicleta(logs *vetorLogsGeral, int tamIni, int tamFim);
 void printaHistogramaPorBike(logs *vetorLogsGeral, int tamIni, int tamFim);
