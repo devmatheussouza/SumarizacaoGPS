@@ -104,7 +104,7 @@ void inicializaVetorLogs(logs *vetorLogsGeral, int tamanhoVetor)
 
 bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
 {
-    int i = 0, j, tamInicial = 10;
+    int i = 0, j, tamInicial = 10, qntReduzir=0;
     *qntBikes = 1;
     bikes* bicicletas = malloc(sizeof(bikes)*tamInicial);
 
@@ -124,6 +124,9 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
     /* Verifica quantas bikes têm no vetor de logs e preenche o vetor de bikes com nome e 
         posicão inicial e final (no vetor de logs) de determinada bicicleta */
     while(i < tamVetLogs){
+        if(strcmp(vetorLogsGeral[i].nome_bicicleta, "z") == 0){
+            qntReduzir++;
+        }
         if(strcmp(bicicletas[j].nome, vetorLogsGeral[i].nome_bicicleta) != 0 && strcmp(vetorLogsGeral[i].nome_bicicleta, "z") != 0){
             bicicletas[j].ultimaPosicao = i;
             (*qntBikes)++;
@@ -139,7 +142,7 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
         }
         i++;
     }
-    bicicletas[j].ultimaPosicao = i-1;
+    bicicletas[j].ultimaPosicao = i-1-qntReduzir;
 
     for(i=tamInicial-1; i>=*qntBikes; i--)
         free(bicicletas[i].nome);
