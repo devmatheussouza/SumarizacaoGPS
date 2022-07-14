@@ -2,7 +2,7 @@ CFLAGS = -g -Wall -std=c99
 
 all: gps
 
-gps: gps.o lib-estrutural.o funcoes-auxiliares.o manipula-logs.o
+gps: gps.o lib-estrutural.o funcoes-auxiliares.o manipula-logs.o 
 	gcc gps.o lib-estrutural.o funcoes-auxiliares.o manipula-logs.o -o gps
 
 gps.o: gps.c lib-estrutural.h
