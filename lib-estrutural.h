@@ -29,5 +29,6 @@ int funcaoModeloBikeSwitchCase(bikes *vetBikes, int qntBikes);
 void printaSumarioPorBicicleta(logs* vetorLogsGeral, int posInicial, int posFim);
 void printaVetorLogs(logs *vetorLogsGeral, int qntLogs);
 void printAgrupadoPorBicicleta(logs *vetorLogsGeral, int tamIni, int tamFim);
+void printAtividadesBicicleta(logs *vetorLogsGeral, bikes* vetBikes, int qntBikes, int opcaoUser);
 void printaHistogramaPorBike(logs *vetorLogsGeral, int tamIni, int tamFim);
 void printaNomesBikes(bikes *vetBikes, int qntBikes);

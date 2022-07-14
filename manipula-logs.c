@@ -284,22 +284,18 @@ void interacaoResultadosComUsuario(logs* vetorLogsGeral, bikes* vetBikes, int qn
             break;
 
         case 3:
-            modeloEscolhido = funcaoModeloBikeSwitchCase(vetBikes, qntBikes);
-            ordenaAtividadesBicicletaPorData(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
-            printAgrupadoPorBicicleta(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
+            printAtividadesBicicleta(vetorLogsGeral, vetBikes, qntBikes, opcaoUser);
             printf("\n");
             break;
 
         case 4:
-            modeloEscolhido = funcaoModeloBikeSwitchCase(vetBikes, qntBikes);
-            ordenaAtividadesBicicletaPorDistancia(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
-            printAgrupadoPorBicicleta(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
+            printAtividadesBicicleta(vetorLogsGeral, vetBikes, qntBikes, opcaoUser);
             printf("\n");
             break;
 
         case 5:
-            ordenaAtividadesBicicletaPorSubidaAcumulada(vetorLogsGeral, 0, qntLogs);
-            printaVetorLogs(vetorLogsGeral, qntLogs);
+            ordenaAtividadesBicicletaPorSubidaAcumulada(vetorLogsGeral, 0, qntLogs-1);
+            printaVetorLogs(vetorLogsGeral, qntLogs-1);
             ordenaVetorLogs(vetorLogsGeral, qntLogs);
             printf("\n");
             break;
