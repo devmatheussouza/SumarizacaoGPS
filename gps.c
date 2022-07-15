@@ -40,6 +40,8 @@ int main(int argc, char **argv)
 
     ordenaVetorLogs(vetorLogsGeral, qntLogs);
 
+    // printaVetorLogs(vetorLogsGeral, qntLogs);
+
     vetBikes = preencheVetorBikes(vetorLogsGeral, qntLogs, &qntBikes);
 
     interacaoResultadosComUsuario(vetorLogsGeral, vetBikes, qntBikes, qntLogs);

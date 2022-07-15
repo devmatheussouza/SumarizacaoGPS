@@ -33,7 +33,7 @@ void ordenaAtividadesBicicletaPorData(logs* vetor, int tamIni, int tamFim)
     do
     {
         continuaOrdenacao = 0;
-        for(i=tamIni; i<tamFim; i++){
+        for(i=tamIni; i<tamFim-1; i++){
             if(strcmp(vetor[i].data_atividade, vetor[i+1].data_atividade) > 0){
                 aux = vetor[i];
                 vetor[i] = vetor[i+1];
@@ -53,7 +53,7 @@ void ordenaAtividadesBicicletaPorDistancia(logs* vetor, int tamIni, int tamFim)
     do
     {
         continuaOrdenacao = 0;
-        for(i=tamIni; i<tamFim; i++){
+        for(i=tamIni; i<tamFim-1; i++){
             if(vetor[i].distancia > vetor[i+1].distancia){
                 aux = vetor[i];
                 vetor[i] = vetor[i+1];
@@ -73,7 +73,7 @@ void ordenaAtividadesBicicletaPorSubidaAcumulada(logs* vetor, int tamIni, int ta
     do
     {
         continuaOrdenacao = 0;
-        for(i=tamIni; i<tamFim; i++){
+        for(i=tamIni; i<tamFim-1; i++){
             if(vetor[i].subidaAcumulada > vetor[i+1].subidaAcumulada){
                 aux = vetor[i];
                 vetor[i] = vetor[i+1];
@@ -128,7 +128,7 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
             qntReduzir++;
         }
         if(strcmp(bicicletas[j].nome, vetorLogsGeral[i].nome_bicicleta) != 0 && strcmp(vetorLogsGeral[i].nome_bicicleta, "z") != 0){
-            bicicletas[j].ultimaPosicao = i;
+            bicicletas[j].ultimaPosicao = i-1;
             (*qntBikes)++;
             j++;
             if(j > tamInicial){
@@ -137,7 +137,7 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
                     exit(1);
                 }
             }
-            bicicletas[j].primeiraPosicao = i+1;
+            bicicletas[j].primeiraPosicao = i;
             strcpy(bicicletas[j].nome, vetorLogsGeral[i].nome_bicicleta);
         }
         i++;
@@ -168,7 +168,7 @@ void printaVetorLogs(logs *vetorLogsGeral, int qntLogs)
            "SUB. ACUMULADA(M)");
 
     i=0;
-    while (i <= qntLogs){
+    while (i < qntLogs){
         if(strchr(vetorLogsGeral[i].nome_bicicleta, '\n') != NULL)
             vetorLogsGeral[i].nome_bicicleta[strlen(vetorLogsGeral[i].nome_bicicleta) - 1] = 0;
         
@@ -205,7 +205,7 @@ void printAgrupadoPorBicicleta(logs *vetorLogsGeral, int tamIni, int tamFim)
         "CAD. MEDIA(BPM)",
         "SUB. ACUMULADA(M)");
     
-    for(i=tamIni; i<=tamFim; i++){
+    for(i=tamIni; i<tamFim; i++){
         if(strchr(vetorLogsGeral[i].nome_bicicleta, '\n') != NULL)
             vetorLogsGeral[i].nome_bicicleta[strlen(vetorLogsGeral[i].nome_bicicleta) - 1] = 0;
         sscanf(vetorLogsGeral[i].data_atividade, "%d-%d-%d", &ano, &mes, &dia);
@@ -302,8 +302,9 @@ void printaNomesBikes(bikes *vetBikes, int qntBikes)
 void printaSumarioPorBicicleta(logs *vetorLogsGeral, int posInicial, int posFim)
 {
     int i, qntDist=0;
-    float somaDist=0, menorDist=vetorLogsGeral[0].distancia, maiorDist=vetorLogsGeral[0].distancia, distMedia=0;
+    float somaDist=0, menorDist=vetorLogsGeral[posInicial].distancia, maiorDist=vetorLogsGeral[posInicial].distancia, distMedia=0;
     for(i=posInicial; i<=posFim; i++){
+        // printf("Pos ini: %d  Pos fim: %d\n", i, posFim);
         if(strcmp(vetorLogsGeral[i].nome_bicicleta, "z") != 0){
             somaDist += vetorLogsGeral[i].distancia;
             if(menorDist > vetorLogsGeral[i].distancia)
@@ -314,7 +315,7 @@ void printaSumarioPorBicicleta(logs *vetorLogsGeral, int posInicial, int posFim)
         }
     }
 
-    distMedia = somaDist/qntDist;
+    distMedia = somaDist/(posFim-posInicial+1);
 
     printf("\n");
     printf("******** Sumario dos logs ********\n");
