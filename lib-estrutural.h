@@ -1,6 +1,6 @@
 typedef struct
 {
-    char *nome;
+    char nome[100];
     int primeiraPosicao;
     int ultimaPosicao;
 } bikes;
@@ -32,3 +32,5 @@ void printAgrupadoPorBicicleta(logs *vetorLogsGeral, int tamIni, int tamFim);
 void printAtividadesBicicleta(logs *vetorLogsGeral, bikes* vetBikes, int qntBikes, int opcaoUser);
 void printaHistogramaPorBike(logs *vetorLogsGeral, int tamIni, int tamFim);
 void printaNomesBikes(bikes *vetBikes, int qntBikes);
+void freeVetorLogs(logs* vetor);
+void freeVetorBikes(bikes* vetor);

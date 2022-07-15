@@ -8,6 +8,7 @@
 #include <strings.h>
 #include "lib-estrutural.h"
 #include "funcoes-auxiliares.h"
+#include <math.h>
 
 void ordenaVetorLogs(logs *vetor, int tamanho)
 {
@@ -33,7 +34,7 @@ void ordenaAtividadesBicicletaPorData(logs* vetor, int tamIni, int tamFim)
     do
     {
         continuaOrdenacao = 0;
-        for(i=tamIni; i<tamFim-1; i++){
+        for(i=tamIni; i<tamFim; i++){
             if(strcmp(vetor[i].data_atividade, vetor[i+1].data_atividade) > 0){
                 aux = vetor[i];
                 vetor[i] = vetor[i+1];
@@ -53,7 +54,7 @@ void ordenaAtividadesBicicletaPorDistancia(logs* vetor, int tamIni, int tamFim)
     do
     {
         continuaOrdenacao = 0;
-        for(i=tamIni; i<tamFim-1; i++){
+        for(i=tamIni; i<tamFim; i++){
             if(vetor[i].distancia > vetor[i+1].distancia){
                 aux = vetor[i];
                 vetor[i] = vetor[i+1];
@@ -73,7 +74,7 @@ void ordenaAtividadesBicicletaPorSubidaAcumulada(logs* vetor, int tamIni, int ta
     do
     {
         continuaOrdenacao = 0;
-        for(i=tamIni; i<tamFim-1; i++){
+        for(i=tamIni; i<tamFim; i++){
             if(vetor[i].subidaAcumulada > vetor[i+1].subidaAcumulada){
                 aux = vetor[i];
                 vetor[i] = vetor[i+1];
@@ -110,7 +111,6 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
 
     // Inicializa vetor de bikes;
     for(i=0; i<tamInicial; i++){
-        bicicletas[i].nome = malloc(sizeof(char) * 100);
         strcpy(bicicletas[i].nome, "z");
         bicicletas[i].primeiraPosicao = -1;
         bicicletas[i].ultimaPosicao = -1;
@@ -143,9 +143,6 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
         i++;
     }
     bicicletas[j].ultimaPosicao = i-1-qntReduzir;
-
-    for(i=tamInicial-1; i>=*qntBikes; i--)
-        free(bicicletas[i].nome);
 
     return bicicletas;
 }
@@ -249,30 +246,33 @@ int funcaoModeloBikeSwitchCase(bikes* vetBikes, int qntBikes)
 }
 
 
-void printaHistogramaPorBike(logs *vetorLogsGeral, int tamIni, int tamFim)
+void printaHistogramaPorBike(logs *vetorLogsGeral, int posIni, int posFim)
 {
     int menorDistLog, menorDistHist, maiorDistLog, maiorDistHist, i;
     // Pega-se a menor e a maior distância e faz-se um casting para adotar um intervalo de inteiros;
-    menorDistLog = (int) vetorLogsGeral[tamIni].distancia;
-    maiorDistLog = (int) vetorLogsGeral[tamFim-1].distancia;
+    printf("Pos ini: %d Pos fim: %d\n", posIni, posFim);
+    menorDistLog = (int) vetorLogsGeral[posIni].distancia;
+    maiorDistLog = (int) vetorLogsGeral[posFim].distancia;
     /* Subtrai-se o último dígito para adotar um intervalo de 10 em 10; 
         Exemplo: menorDistLog = 125, entao menorDistHist = 120; */
     menorDistHist = menorDistLog - (menorDistLog % 10);
     maiorDistHist = maiorDistLog - (maiorDistLog % 10);
+    printf("Menor dist: %d Maior dist: %d\n", menorDistHist, maiorDistHist);
+    printf("Menor dist: %d Maior dist: %d\n", (int) vetorLogsGeral[posIni].distancia, (int) vetorLogsGeral[posFim].distancia);
 
-    printf("Bicicleta: %s\n", vetorLogsGeral[tamIni].nome_bicicleta);
+    printf("Bicicleta: %s\n", vetorLogsGeral[posIni].nome_bicicleta);
 
-    i = tamIni;
-    while(i < tamFim && menorDistHist <= maiorDistHist){
+    i = posIni;
+    while(i <= posFim && menorDistHist <= maiorDistHist){
         if (menorDistHist >= 100){
-            printf("%d - %d %s ", menorDistHist, menorDistHist+10, "|");
+            printf("%d - %d %s ", menorDistHist, menorDistHist+9, "|");
         } else if(menorDistHist + 10 >= 100) {
-            printf("%3d - %d %1s ", menorDistHist, menorDistHist+10, "|");
+            printf("%3d - %d %2s ", menorDistHist, menorDistHist+9, "|");
         } else {
-            printf("%3d - %1d %2s ", menorDistHist, menorDistHist+10, "|");
+            printf("%3d - %1d %2s ", menorDistHist, menorDistHist+9, "|");
         }
         
-        while((vetorLogsGeral[i].distancia >= menorDistHist) && (vetorLogsGeral[i].distancia < (menorDistHist+10) && i < tamFim)){
+        while(( round(vetorLogsGeral[i].distancia) >= menorDistHist) && ( round(vetorLogsGeral[i].distancia) <= (menorDistHist+9)) && i <= posFim){
             printf("* ");
             i++;
         }
@@ -378,4 +378,12 @@ void printAtividadesBicicleta(logs *vetorLogsGeral, bikes* vetBikes, int qntBike
         printf("\n\n");
         j++;
     }
+}
+
+void freeVetorLogs(logs* vetor){
+    free(vetor);
+}
+
+void freeVetorBikes(bikes* vetor){
+    free(vetor);
 }

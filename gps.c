@@ -15,7 +15,7 @@ int main(int argc, char **argv)
     char *caminho = argv[2];
     logs *vetorLogsGeral;
     bikes *vetBikes;
-    int qntBikes, i, qntLogs; 
+    int qntBikes, qntLogs; 
 
     if (caminho[strlen(caminho) - 1] != '/')
         strcat(caminho, "/");
@@ -40,16 +40,12 @@ int main(int argc, char **argv)
 
     ordenaVetorLogs(vetorLogsGeral, qntLogs);
 
-    // printaVetorLogs(vetorLogsGeral, qntLogs);
-
     vetBikes = preencheVetorBikes(vetorLogsGeral, qntLogs, &qntBikes);
 
     interacaoResultadosComUsuario(vetorLogsGeral, vetBikes, qntBikes, qntLogs);
 
-    free(vetorLogsGeral);
+    freeVetorLogs(vetorLogsGeral);
 
-    for (i = 0; i < qntBikes; i++)
-        free(vetBikes[i].nome);
     free(vetBikes);
 
     (void)closedir(dirStream);
