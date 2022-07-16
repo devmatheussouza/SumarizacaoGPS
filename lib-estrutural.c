@@ -185,8 +185,6 @@ void printaVetorLogs(logs *vetorLogsGeral, int qntLogs)
                 vetorLogsGeral[i].cadenciaMedia,
                 vetorLogsGeral[i].subidaAcumulada);
         }
-
-
         i++;
     }
 }
@@ -435,7 +433,7 @@ void plotaGrafico(logs* vetorLogsGeral, int posIni, int posFim){
     i = posIni;
     while(i <= posFim && menorDistHist <= maiorDistHist){
         qnt = 0;
-        while(( round(vetorLogsGeral[i].distancia) >= menorDistHist) && ( round(vetorLogsGeral[i].distancia) <= (menorDistHist+9)) && i <= posFim){
+        while((round(vetorLogsGeral[i].distancia) >= menorDistHist) && (round(vetorLogsGeral[i].distancia) <= (menorDistHist+9)) && i <= posFim){
             qnt++;
             if(i == posFim) break;
             i++;

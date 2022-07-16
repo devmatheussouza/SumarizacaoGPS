@@ -296,7 +296,7 @@ void interacaoResultadosComUsuario(logs* vetorLogsGeral, bikes* vetBikes, int qn
 
         case 5:
             ordenaAtividadesBicicletaPorSubidaAcumulada(vetorLogsGeral, 0, qntLogs-1);
-            printaVetorLogs(vetorLogsGeral, qntLogs-1);
+            printaVetorLogs(vetorLogsGeral, qntLogs);
             ordenaVetorLogs(vetorLogsGeral, qntLogs);
             printf("\n");
             break;
