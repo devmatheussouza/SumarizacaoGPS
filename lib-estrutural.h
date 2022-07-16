@@ -32,5 +32,7 @@ void printAgrupadoPorBicicleta(logs *vetorLogsGeral, int tamIni, int tamFim);
 void printAtividadesBicicleta(logs *vetorLogsGeral, bikes* vetBikes, int qntBikes, int opcaoUser);
 void printaHistogramaPorBike(logs *vetorLogsGeral, int tamIni, int tamFim);
 void printaNomesBikes(bikes *vetBikes, int qntBikes);
+void plotaGrafico(logs* vetorLogsGeral, int posIni, int posFim);
+int maiorQntEmDeterminadoIntervaloDist(logs* vetorLogsGeral, int posIni, int posFim);
 void freeVetorLogs(logs* vetor);
 void freeVetorBikes(bikes* vetor);

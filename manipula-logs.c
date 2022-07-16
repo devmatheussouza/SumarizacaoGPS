@@ -261,6 +261,7 @@ void interacaoResultadosComUsuario(logs* vetorLogsGeral, bikes* vetBikes, int qn
         printf("4) Listar todas atividades agrupadas por bicicleta e ordenadas pela distancia\n");
         printf("5) Listar todas atividades ordenadas pela subida acumulada\n");
         printf("6) Escolher um modelo de bike e mostrar um histograma da distribuicao das distancias\n");
+        printf("7) Escolher um modelo de bike e plotar um grafico da distribuicao das distancias\n");
         printf("0) Sair \n");
         printf("\n");
         printf("Acao desejada: ");
@@ -306,6 +307,12 @@ void interacaoResultadosComUsuario(logs* vetorLogsGeral, bikes* vetBikes, int qn
             printaHistogramaPorBike(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
             printf("\n");
             break;
+
+        case 7: 
+            modeloEscolhido = funcaoModeloBikeSwitchCase(vetBikes, qntBikes);
+            ordenaAtividadesBicicletaPorDistancia(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
+            plotaGrafico(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
+            printf("\n");
 
         default:
             printf("Digite um numero valido!\n");

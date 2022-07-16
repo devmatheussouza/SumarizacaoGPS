@@ -1,3 +1,4 @@
+#define _DEFAULT_SOURCE
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -9,6 +10,8 @@
 #include "lib-estrutural.h"
 #include "funcoes-auxiliares.h"
 #include <math.h>
+
+#define NUM_COMMANDS 9
 
 void ordenaVetorLogs(logs *vetor, int tamanho)
 {
@@ -250,15 +253,12 @@ void printaHistogramaPorBike(logs *vetorLogsGeral, int posIni, int posFim)
 {
     int menorDistLog, menorDistHist, maiorDistLog, maiorDistHist, i;
     // Pega-se a menor e a maior distância e faz-se um casting para adotar um intervalo de inteiros;
-    printf("Pos ini: %d Pos fim: %d\n", posIni, posFim);
     menorDistLog = (int) vetorLogsGeral[posIni].distancia;
     maiorDistLog = (int) vetorLogsGeral[posFim].distancia;
     /* Subtrai-se o último dígito para adotar um intervalo de 10 em 10; 
         Exemplo: menorDistLog = 125, entao menorDistHist = 120; */
     menorDistHist = menorDistLog - (menorDistLog % 10);
     maiorDistHist = maiorDistLog - (maiorDistLog % 10);
-    printf("Menor dist: %d Maior dist: %d\n", menorDistHist, maiorDistHist);
-    printf("Menor dist: %d Maior dist: %d\n", (int) vetorLogsGeral[posIni].distancia, (int) vetorLogsGeral[posFim].distancia);
 
     printf("Bicicleta: %s\n", vetorLogsGeral[posIni].nome_bicicleta);
 
@@ -274,6 +274,7 @@ void printaHistogramaPorBike(logs *vetorLogsGeral, int posIni, int posFim)
         
         while(( round(vetorLogsGeral[i].distancia) >= menorDistHist) && ( round(vetorLogsGeral[i].distancia) <= (menorDistHist+9)) && i <= posFim){
             printf("* ");
+            if(i == posFim) break;
             i++;
         }
         menorDistHist += 10;
@@ -378,6 +379,73 @@ void printAtividadesBicicleta(logs *vetorLogsGeral, bikes* vetBikes, int qntBike
         printf("\n\n");
         j++;
     }
+}
+
+int maiorQntEmDeterminadoIntervaloDist(logs* vetorLogsGeral, int posIni, int posFim){
+    int i, menorDistLog, menorDistHist, maiorDistLog, maiorDistHist,  qnt, maiorQnt=0;
+    menorDistLog = (int) vetorLogsGeral[posIni].distancia;
+    maiorDistLog = (int) vetorLogsGeral[posFim].distancia;
+
+    menorDistHist = menorDistLog - (menorDistLog % 10);
+    maiorDistHist = maiorDistLog - (maiorDistLog % 10);
+
+    i = posIni;
+    while(i <= posFim && menorDistHist <= maiorDistHist){
+        qnt = 0;
+        while(( round(vetorLogsGeral[i].distancia) >= menorDistHist) && ( round(vetorLogsGeral[i].distancia) <= (menorDistHist+9)) && i <= posFim){
+            qnt++;
+            if(i == posFim) break;
+            i++;
+        }
+        if(maiorQnt < qnt) maiorQnt = qnt;
+        menorDistHist += 10;
+    }
+
+    return maiorQnt;
+}
+
+
+void plotaGrafico(logs* vetorLogsGeral, int posIni, int posFim){
+    int i, menorDistLog, menorDistHist, maiorDistLog, maiorDistHist,  qnt, maiorQnt;
+    char commandsForGnuplot[NUM_COMMANDS][200] = {"set title \"Histograma\"", 
+    "set yrange [0:*] reverse",
+    "set style fill solid", 
+    "set xlabel \"Quantidade\"",
+    "set ylabel \"Distância(KM)\"",
+    "unset key",
+    "myBoxWidth = 0.6",
+    "set offsets 0,0,0.5-myBoxWidth/2,0.5",
+     "plot '-' using (column(2)):(column(0)):(0):(column(2)):($0-myBoxWidth/2):($0+myBoxWidth/2.):($0+2):ytic(1) with boxxyerror lc var"};
+
+    FILE * gnuplotPipe = popen ("gnuplot -persist", "w");
+
+    maiorQnt = maiorQntEmDeterminadoIntervaloDist(vetorLogsGeral, posIni, posFim);
+    
+    fprintf(gnuplotPipe, "set xrange [0:%d]\n", maiorQnt+1);
+
+    for (i=0; i < NUM_COMMANDS; i++)
+        fprintf(gnuplotPipe, "%s\n", commandsForGnuplot[i]); 
+
+    menorDistLog = (int) vetorLogsGeral[posIni].distancia;
+    maiorDistLog = (int) vetorLogsGeral[posFim].distancia;
+
+    menorDistHist = menorDistLog - (menorDistLog % 10);
+    maiorDistHist = maiorDistLog - (maiorDistLog % 10);
+
+    i = posIni;
+    while(i <= posFim && menorDistHist <= maiorDistHist){
+        qnt = 0;
+        while(( round(vetorLogsGeral[i].distancia) >= menorDistHist) && ( round(vetorLogsGeral[i].distancia) <= (menorDistHist+9)) && i <= posFim){
+            qnt++;
+            if(i == posFim) break;
+            i++;
+        }
+        fprintf(gnuplotPipe, "%d-%d\t%d\n", menorDistHist, menorDistHist+9, qnt);
+        menorDistHist += 10;
+    }
+
+    fprintf(gnuplotPipe, "e\n");
+    fclose(gnuplotPipe);
 }
 
 void freeVetorLogs(logs* vetor){

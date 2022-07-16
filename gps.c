@@ -1,3 +1,4 @@
+#define _DEFAULT_SOURCE
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -8,6 +9,7 @@
 #include <strings.h>
 #include "funcoes-auxiliares.h"
 #include "manipula-logs.h"
+#include <math.h>
 
 int main(int argc, char **argv)
 {
