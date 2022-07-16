@@ -7,19 +7,36 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include "lib-estrutural.h"
 #include "funcoes-auxiliares.h"
 #include <math.h>
 
+#define NOME_INI "~"
 #define NUM_COMMANDS 9
 
-void ordenaVetorLogs(logs *vetor, int tamanho)
+void inicializaVetorLogs(logs *vetorLogsGeral, int tamanhoVetor)
 {
-    int k, j;
+    int i;
+    for (i = 0; i < tamanhoVetor; i++){
+        strcpy(vetorLogsGeral[i].nome_bicicleta, NOME_INI);
+        strcpy(vetorLogsGeral[i].nome_arquivo, NOME_INI);
+        strcpy(vetorLogsGeral[i].data_atividade, NOME_INI);
+        vetorLogsGeral[i].distancia = 0;
+        vetorLogsGeral[i].velocidadeMaxima = 0;
+        vetorLogsGeral[i].velocidadeMedia = 0;
+        vetorLogsGeral[i].heartRateMaximo = 0;
+        vetorLogsGeral[i].heartRateMedio = 0;
+        vetorLogsGeral[i].cadenciaMedia = 0;
+        vetorLogsGeral[i].subidaAcumulada = 0;
+    }
+}
+
+void ordenaVetorLogsPorNome(logs *vetor, int tamanho)
+{
+    int i, j;
     logs aux;
 
-    for (k = 0; k < tamanho - 1; k++){
-        for (j = 0; j < tamanho - k - 1; j++){
+    for (i = 0; i < tamanho - 1; i++){
+        for (j = 0; j < tamanho - i - 1; j++){
             if (strcmp(vetor[j].nome_bicicleta, vetor[j + 1].nome_bicicleta) > 0){
                 aux = vetor[j];
                 vetor[j] = vetor[j + 1];
@@ -29,80 +46,54 @@ void ordenaVetorLogs(logs *vetor, int tamanho)
     }
 }
 
-void ordenaAtividadesBicicletaPorData(logs* vetor, int tamIni, int tamFim)
+void ordenadorVetLogs(logs* vetor, int posIni, int posFim, int opcaoUser)
 {
-    int i, continuaOrdenacao;
+    int i, j, indexMenor;
     logs aux;
 
-    do
-    {
-        continuaOrdenacao = 0;
-        for(i=tamIni; i<tamFim; i++){
-            if(strcmp(vetor[i].data_atividade, vetor[i+1].data_atividade) > 0){
+    if(opcaoUser == 3){
+        for(i=posIni; i<posFim; i++){
+            indexMenor = i;
+            for(j=i+1; j<=posFim; j++){
+                if(strcmp(vetor[j].data_atividade, vetor[indexMenor].data_atividade) < 0) 
+                    indexMenor = j;
+            }
+            if(i != indexMenor){
                 aux = vetor[i];
-                vetor[i] = vetor[i+1];
-                vetor[i+1] = aux;
-                continuaOrdenacao = i;
+                vetor[i] = vetor[indexMenor];
+                vetor[indexMenor] = aux;
             }
         }
-        tamFim--;
-    } while (continuaOrdenacao != 0);
-}
+    }
 
-void ordenaAtividadesBicicletaPorDistancia(logs* vetor, int tamIni, int tamFim)
-{
-    int i, continuaOrdenacao;
-    logs aux;
-
-    do
-    {
-        continuaOrdenacao = 0;
-        for(i=tamIni; i<tamFim; i++){
-            if(vetor[i].distancia > vetor[i+1].distancia){
+    if(opcaoUser == 4 || opcaoUser == 6 || opcaoUser == 7){
+        for(i=posIni; i<posFim; i++){
+            indexMenor = i;
+            for(j=i+1; j<=posFim; j++){
+                if(vetor[j].distancia < vetor[indexMenor].distancia) 
+                    indexMenor = j;
+            }
+            if(i != indexMenor){
                 aux = vetor[i];
-                vetor[i] = vetor[i+1];
-                vetor[i+1] = aux;
-                continuaOrdenacao = i;
+                vetor[i] = vetor[indexMenor];
+                vetor[indexMenor] = aux;
             }
         }
-        tamFim--;
-    } while (continuaOrdenacao != 0);
-}
+    }
 
-void ordenaAtividadesBicicletaPorSubidaAcumulada(logs* vetor, int tamIni, int tamFim)
-{
-    int i, continuaOrdenacao;
-    logs aux;
-
-    do
-    {
-        continuaOrdenacao = 0;
-        for(i=tamIni; i<tamFim; i++){
-            if(vetor[i].subidaAcumulada > vetor[i+1].subidaAcumulada){
+    if(opcaoUser == 5){
+        for(i=posIni; i<posFim; i++){
+            indexMenor = i;
+            for(j=i+1; j<=posFim; j++){
+                if(vetor[j].subidaAcumulada < vetor[indexMenor].subidaAcumulada) 
+                    indexMenor = j;
+            }
+            if(i != indexMenor){
                 aux = vetor[i];
-                vetor[i] = vetor[i+1];
-                vetor[i+1] = aux;
-                continuaOrdenacao = i;
+                vetor[i] = vetor[indexMenor];
+                vetor[indexMenor] = aux;
             }
         }
-        tamFim--;
-    } while (continuaOrdenacao != 0);
-}
-
-void inicializaVetorLogs(logs *vetorLogsGeral, int tamanhoVetor)
-{
-    int i;
-    for (i = 0; i < tamanhoVetor; i++){
-        strcpy(vetorLogsGeral[i].nome_bicicleta, "z");
-        strcpy(vetorLogsGeral[i].nome_arquivo, "z");
-        strcpy(vetorLogsGeral[i].data_atividade, "z");
-        vetorLogsGeral[i].distancia = 0;
-        vetorLogsGeral[i].velocidadeMaxima = 0;
-        vetorLogsGeral[i].velocidadeMedia = 0;
-        vetorLogsGeral[i].heartRateMaximo = 0;
-        vetorLogsGeral[i].heartRateMedio = 0;
-        vetorLogsGeral[i].cadenciaMedia = 0;
-        vetorLogsGeral[i].subidaAcumulada = 0;
     }
 }
 
@@ -114,7 +105,7 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
 
     // Inicializa vetor de bikes;
     for(i=0; i<tamInicial; i++){
-        strcpy(bicicletas[i].nome, "z");
+        strcpy(bicicletas[i].nome, NOME_INI);
         bicicletas[i].primeiraPosicao = -1;
         bicicletas[i].ultimaPosicao = -1;
     }
@@ -127,10 +118,10 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
     /* Verifica quantas bikes têm no vetor de logs e preenche o vetor de bikes com nome e 
         posicão inicial e final (no vetor de logs) de determinada bicicleta */
     while(i < tamVetLogs){
-        if(strcmp(vetorLogsGeral[i].nome_bicicleta, "z") == 0){
+        if(strcmp(vetorLogsGeral[i].nome_bicicleta, NOME_INI) == 0){
             qntReduzir++;
         }
-        if(strcmp(bicicletas[j].nome, vetorLogsGeral[i].nome_bicicleta) != 0 && strcmp(vetorLogsGeral[i].nome_bicicleta, "z") != 0){
+        if(strcmp(bicicletas[j].nome, vetorLogsGeral[i].nome_bicicleta) != 0 && strcmp(vetorLogsGeral[i].nome_bicicleta, NOME_INI) != 0){
             bicicletas[j].ultimaPosicao = i-1;
             (*qntBikes)++;
             j++;
@@ -148,45 +139,6 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
     bicicletas[j].ultimaPosicao = i-1-qntReduzir;
 
     return bicicletas;
-}
-
-void printaVetorLogs(logs *vetorLogsGeral, int qntLogs)
-{
-    int i;
-    printf("%-18s%-22s%-15s%-15s%-15s%-15s%-15s%-12s",
-           "ARQUIVO",
-           "NOME",
-           "DATA",
-           "DISTANCIA(KM)",
-           "V. MAX(KM/H)",
-           "V. MEDIA(KM/H)",
-           "HR MEDIO(BPM)",
-           "HR MAX(BPM)");
-
-    printf("%-17s%-15s\n",
-           "CAD. MEDIA(BPM)",
-           "SUB. ACUMULADA(M)");
-
-    i=0;
-    while (i < qntLogs){
-        if(strchr(vetorLogsGeral[i].nome_bicicleta, '\n') != NULL)
-            vetorLogsGeral[i].nome_bicicleta[strlen(vetorLogsGeral[i].nome_bicicleta) - 1] = 0;
-        
-        if(strcmp(vetorLogsGeral[i].nome_bicicleta, "z") !=0){
-            printf("%-18s%-22s%-15s%-15.2f%-15.2f%-15.2f%-15.0f%-12.0f%-17.0f%-15.2f\n",
-                vetorLogsGeral[i].nome_arquivo,
-                vetorLogsGeral[i].nome_bicicleta,
-                vetorLogsGeral[i].data_atividade,
-                vetorLogsGeral[i].distancia,
-                vetorLogsGeral[i].velocidadeMaxima,
-                vetorLogsGeral[i].velocidadeMedia,
-                vetorLogsGeral[i].heartRateMedio,
-                vetorLogsGeral[i].heartRateMaximo,
-                vetorLogsGeral[i].cadenciaMedia,
-                vetorLogsGeral[i].subidaAcumulada);
-        }
-        i++;
-    }
 }
 
 void printAgrupadoPorBicicleta(logs *vetorLogsGeral, int tamIni, int tamFim, int opcaoUser)
@@ -250,7 +202,6 @@ int funcaoModeloBikeSwitchCase(bikes* vetBikes, int qntBikes)
     return modeloEscolhido;
 }
 
-
 void printaHistogramaPorBike(logs *vetorLogsGeral, int posIni, int posFim)
 {
     int menorDistLog, menorDistHist, maiorDistLog, maiorDistHist, i;
@@ -266,13 +217,9 @@ void printaHistogramaPorBike(logs *vetorLogsGeral, int posIni, int posFim)
 
     i = posIni;
     while(i <= posFim && menorDistHist <= maiorDistHist){
-        if (menorDistHist >= 100){
-            printf("%d - %d %s ", menorDistHist, menorDistHist+9, "|");
-        } else if(menorDistHist + 10 >= 100) {
-            printf("%3d - %d %2s ", menorDistHist, menorDistHist+9, "|");
-        } else {
-            printf("%3d - %1d %2s ", menorDistHist, menorDistHist+9, "|");
-        }
+        if (menorDistHist >= 100) printf("%d - %d %s ", menorDistHist, menorDistHist+9, "|");
+        else if(menorDistHist + 10 >= 100) printf("%3d - %d %2s ", menorDistHist, menorDistHist+9, "|");
+        else printf("%3d - %1d %2s ", menorDistHist, menorDistHist+9, "|");
         
         while(( round(vetorLogsGeral[i].distancia) >= menorDistHist) && ( round(vetorLogsGeral[i].distancia) <= (menorDistHist+9)) && i <= posFim){
             printf("* ");
@@ -292,9 +239,8 @@ void printaNomesBikes(bikes *vetBikes, int qntBikes)
     printf("*** Modelos encontrados ***\n");
     printf("\n");
     for(i=0; i<qntBikes; i++){
-        if(strchr(vetBikes[i].nome, '\n') != NULL){
+        if(strchr(vetBikes[i].nome, '\n') != NULL)
             vetBikes[i].nome[strlen(vetBikes[i].nome) - 1] = 0;
-        }
         printf("%s \n", vetBikes[i].nome);
     }
     printf("\n");
@@ -307,8 +253,7 @@ void printaSumarioPorBicicleta(logs *vetorLogsGeral, int posInicial, int posFim)
     int i, qntDist=0;
     float somaDist=0, menorDist=vetorLogsGeral[posInicial].distancia, maiorDist=vetorLogsGeral[posInicial].distancia, distMedia=0;
     for(i=posInicial; i<=posFim; i++){
-        // printf("Pos ini: %d  Pos fim: %d\n", i, posFim);
-        if(strcmp(vetorLogsGeral[i].nome_bicicleta, "z") != 0){
+        if(strcmp(vetorLogsGeral[i].nome_bicicleta, NOME_INI) != 0){
             somaDist += vetorLogsGeral[i].distancia;
             if(menorDist > vetorLogsGeral[i].distancia)
                 menorDist = vetorLogsGeral[i].distancia;
@@ -335,49 +280,17 @@ void printaSumarioPorBicicleta(logs *vetorLogsGeral, int posInicial, int posFim)
 
 void printAtividadesBicicleta(logs *vetorLogsGeral, bikes* vetBikes, int qntBikes, int opcaoUser)
 {
-    int i, j=0, tamIni, tamFim, ano, mes, dia;
+    int j=0, tamIni, tamFim;
 
     while(j<qntBikes){
         tamIni = vetBikes[j].primeiraPosicao;
         tamFim = vetBikes[j].ultimaPosicao;
 
-        if(opcaoUser == 3){
-            ordenaAtividadesBicicletaPorData(vetorLogsGeral, tamIni, tamFim);
-        }
-
-        if(opcaoUser == 4){
-            ordenaAtividadesBicicletaPorDistancia(vetorLogsGeral, tamIni, tamFim);
-        }
+        if(opcaoUser == 3) ordenadorVetLogs(vetorLogsGeral, tamIni, tamFim, opcaoUser);
+        if(opcaoUser == 4) ordenadorVetLogs(vetorLogsGeral, tamIni, tamFim, opcaoUser);
 
         printf("\n\n");
-        printf("Bicicleta: %s\n\n", vetorLogsGeral[tamIni].nome_bicicleta);
-        printf("%-10s%-20s%-20s%-20s%-20s%-20s%-20s%-20s\n",
-            "DATA",
-            "DISTANCIA(KM)",
-            "V. MEDIA(KM/H)",
-            "V. MAX(KM/H)",
-            "HR MEDIO(BPM)",
-            "HR MAX(BPM)",
-            "CAD. MEDIA(BPM)",
-            "SUB. ACUMULADA(M)");
-        
-        for(i=tamIni; i<=tamFim; i++){
-            if(strchr(vetorLogsGeral[i].nome_bicicleta, '\n') != NULL)
-                vetorLogsGeral[i].nome_bicicleta[strlen(vetorLogsGeral[i].nome_bicicleta) - 1] = 0;
-            sscanf(vetorLogsGeral[i].data_atividade, "%d-%d-%d", &ano, &mes, &dia);
-            if(dia<10 && mes<10) printf("%d/%-10d", dia, mes);
-            if(dia<10 && mes>=10) printf("%d/%-10d", dia, mes);
-            if(dia>=10 && mes<10) printf("%d/%-9d", dia, mes);
-            if(dia>=10 && mes>=10) printf("%d/%-9d", dia, mes);
-            printf("%-20.2f%-20.2f%-20.2f%-20.0f%-20.0f%-20.0f%-20.2f\n",
-                vetorLogsGeral[i].distancia,
-                vetorLogsGeral[i].velocidadeMedia,
-                vetorLogsGeral[i].velocidadeMaxima,
-                vetorLogsGeral[i].heartRateMedio,
-                vetorLogsGeral[i].heartRateMaximo,
-                vetorLogsGeral[i].cadenciaMedia,
-                vetorLogsGeral[i].subidaAcumulada);
-        }
+        printAgrupadoPorBicicleta(vetorLogsGeral, tamIni, tamFim, opcaoUser);
         printf("\n\n");
         j++;
     }
@@ -394,7 +307,7 @@ int maiorQntEmDeterminadoIntervaloDist(logs* vetorLogsGeral, int posIni, int pos
     i = posIni;
     while(i <= posFim && menorDistHist <= maiorDistHist){
         qnt = 0;
-        while(( round(vetorLogsGeral[i].distancia) >= menorDistHist) && ( round(vetorLogsGeral[i].distancia) <= (menorDistHist+9)) && i <= posFim){
+        while((round(vetorLogsGeral[i].distancia) >= menorDistHist) && (round(vetorLogsGeral[i].distancia) <= (menorDistHist+9)) && i <= posFim){
             qnt++;
             if(i == posFim) break;
             i++;

@@ -7,8 +7,8 @@
 #include <string.h>
 #include <strings.h>
 #include "funcoes-auxiliares.h"
-#include "manipula-logs.h"
 
+#define NOME_INI "~"
 #define LINESIZE 1024
 
 void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, int* qntLogs)
@@ -36,7 +36,10 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
     i = 0;
     for (;;){
         // Se não tiver mais entradas, break;
-        if (!(dirEntry = readdir(dirStream))) break;
+        if (!(dirEntry = readdir(dirStream))){
+            printf("Leitura finalizada! [100%s]\n\n", "%");
+            break;
+        } 
 
         strcpy(caminhoMaisNomeArquivo, caminho);
         strcpy(nomeDoArquivo, dirEntry->d_name);
@@ -45,6 +48,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
 
         // Se for arquivo, entra no escopo do if;
         if (isDir(caminhoMaisNomeArquivo) != 0){
+            printf("Lendo arquivos de log, aguarde... [%.2f%s]\n", (((float) i) / ((float) *qntLogs))*100, "%");
             arq = fopen(caminhoMaisNomeArquivo, "r");
             if (!arq){
                 perror("Erro ao abrir arquivo.\n");
@@ -53,7 +57,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
 
             strcpy(vetorLogsGeral[i].nome_arquivo, nomeDoArquivo);
 
-            strcpy(timestampAnterior, "z");
+            strcpy(timestampAnterior, NOME_INI);
             primeiraDist = 0;
             altitudeAnterior = 0;
             qntV = 0, qntHR = 0, qntCD = 0;
@@ -73,13 +77,13 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
 
                 /* Se passar da parte do Gear sem ter atribuído o nome da bike,
                     é realizado um break, pois não é um arquivo de log */
-                if (strcmp(vetorLogsGeral[i].nome_bicicleta, "z") == 0){
+                if (strcmp(vetorLogsGeral[i].nome_bicicleta, NOME_INI) == 0){
                     (*qntLogs)--;
                     break;
                 }
 
                 /* Cópia do primeiro horário do arquivo de log */
-                if (strcmp(ptr_string, "Date") == 0 && strcmp(vetorLogsGeral[i].data_atividade, "z") == 0){
+                if (strcmp(ptr_string, "Date") == 0 && strcmp(vetorLogsGeral[i].data_atividade, NOME_INI) == 0){
                     ptr_string = strtok(NULL, " ");
                     ptr_string = strtok(NULL, " ");
                     ptr_string = strtok(NULL, " ");
@@ -188,7 +192,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
                 }
 
                 // Cópia da data do log
-                if (strcmp(ptr_string, "timestamp") == 0 && (strcmp(vetorLogsGeral[i].data_atividade, "z") == 0)){
+                if (strcmp(ptr_string, "timestamp") == 0 && (strcmp(vetorLogsGeral[i].data_atividade, NOME_INI) == 0)){
                     ptr_string = strtok(NULL, " ");
                     strcpy(vetorLogsGeral[i].data_atividade, ptr_string);
                     continue;
@@ -295,22 +299,25 @@ void interacaoResultadosComUsuario(logs* vetorLogsGeral, bikes* vetBikes, int qn
             break;
 
         case 5:
-            ordenaAtividadesBicicletaPorSubidaAcumulada(vetorLogsGeral, 0, qntLogs-1);
+            // ordenaAtividadesBicicletaPorSubidaAcumulada(vetorLogsGeral, 0, qntLogs-1);
+            ordenadorVetLogs(vetorLogsGeral, 0, qntLogs-1, opcaoUser);
             printAgrupadoPorBicicleta(vetorLogsGeral, 0, qntLogs-1, opcaoUser);
-            ordenaVetorLogs(vetorLogsGeral, qntLogs);
+            ordenaVetorLogsPorNome(vetorLogsGeral, qntLogs);
             printf("\n");
             break;
 
         case 6:
             modeloEscolhido = funcaoModeloBikeSwitchCase(vetBikes, qntBikes);
-            ordenaAtividadesBicicletaPorDistancia(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
+            // ordenaAtividadesBicicletaPorDistancia(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
+            ordenadorVetLogs(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao, opcaoUser);
             printaHistogramaPorBike(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
             printf("\n");
             break;
 
         case 7: 
             modeloEscolhido = funcaoModeloBikeSwitchCase(vetBikes, qntBikes);
-            ordenaAtividadesBicicletaPorDistancia(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
+            // ordenaAtividadesBicicletaPorDistancia(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
+            ordenadorVetLogs(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao, opcaoUser);
             plotaGrafico(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
             printf("\n");
 

@@ -8,7 +8,6 @@
 #include <string.h>
 #include <strings.h>
 #include "funcoes-auxiliares.h"
-#include "manipula-logs.h"
 #include <math.h>
 
 int main(int argc, char **argv)
@@ -27,8 +26,6 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    printf("Realizando leitura dos arquivos de log...\n");
-
     qntLogs = verificaQntArquivosEmDiretorio(dirStream, caminho);
     
     if (!(vetorLogsGeral = malloc(sizeof(logs) * qntLogs))){
@@ -40,7 +37,7 @@ int main(int argc, char **argv)
 
     manipulaArquivosLog(dirStream, caminho, vetorLogsGeral, &qntLogs);
 
-    ordenaVetorLogs(vetorLogsGeral, qntLogs);
+    ordenaVetorLogsPorNome(vetorLogsGeral, qntLogs);
 
     vetBikes = preencheVetorBikes(vetorLogsGeral, qntLogs, &qntBikes);
 
@@ -48,7 +45,7 @@ int main(int argc, char **argv)
 
     freeVetorLogs(vetorLogsGeral);
 
-    free(vetBikes);
+    freeVetorBikes(vetBikes);
 
     (void)closedir(dirStream);
     return 0;
