@@ -189,10 +189,14 @@ void printaVetorLogs(logs *vetorLogsGeral, int qntLogs)
     }
 }
 
-void printAgrupadoPorBicicleta(logs *vetorLogsGeral, int tamIni, int tamFim)
+void printAgrupadoPorBicicleta(logs *vetorLogsGeral, int tamIni, int tamFim, int opcaoUser)
 {
     int i, dia, mes, ano;
-    printf("Bicicleta: %s\n", vetorLogsGeral[tamIni].nome_bicicleta);
+    if(opcaoUser == 5){
+        printf("\nLista de todas atividades ordenadas por subida acumulada\n\n");
+    } else {
+        printf("Bicicleta: %s\n", vetorLogsGeral[tamIni].nome_bicicleta);
+    }
     printf("%-10s%-20s%-20s%-20s%-20s%-20s%-20s%-20s\n",
         "DATA",
         "DISTANCIA(KM)",
@@ -203,7 +207,7 @@ void printAgrupadoPorBicicleta(logs *vetorLogsGeral, int tamIni, int tamFim)
         "CAD. MEDIA(BPM)",
         "SUB. ACUMULADA(M)");
     
-    for(i=tamIni; i<tamFim; i++){
+    for(i=tamIni; i<=tamFim; i++){
         if(strchr(vetorLogsGeral[i].nome_bicicleta, '\n') != NULL)
             vetorLogsGeral[i].nome_bicicleta[strlen(vetorLogsGeral[i].nome_bicicleta) - 1] = 0;
         sscanf(vetorLogsGeral[i].data_atividade, "%d-%d-%d", &ano, &mes, &dia);
