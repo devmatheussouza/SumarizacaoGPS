@@ -191,11 +191,15 @@ void printAgrupadoPorBicicleta(logs *vetorLogsGeral, int tamIni, int tamFim, int
             if(strchr(vetorLogsGeral[i].nome_bicicleta, '\n') != NULL)
                 vetorLogsGeral[i].nome_bicicleta[strlen(vetorLogsGeral[i].nome_bicicleta) - 1] = 0;
             if(opcaoUser==5) printf("%-22s", vetorLogsGeral[i].nome_bicicleta);
-            sscanf(vetorLogsGeral[i].data_atividade, "%d-%d-%d", &ano, &mes, &dia);
-            if(dia<10 && mes<10) printf("%02d/%02d%5s", dia, mes, "");
-            if(dia<10 && mes>=10) printf("%02d/%02d%5s", dia, mes, "");
-            if(dia>=10 && mes<10) printf("%02d/%02d%5s", dia, mes, "");
-            if(dia>=10 && mes>=10) printf("%02d/%02d%5s", dia, mes, "");
+            if(strcmp(vetorLogsGeral[i].data_atividade, NOME_INI)==0){
+                printf("%-10s", "~~~~");
+            } else {
+                sscanf(vetorLogsGeral[i].data_atividade, "%d-%d-%d", &ano, &mes, &dia);
+                if(dia<10 && mes<10) printf("%02d/%02d%5s", dia, mes, "");
+                if(dia<10 && mes>=10) printf("%02d/%02d%5s", dia, mes, "");
+                if(dia>=10 && mes<10) printf("%02d/%02d%5s", dia, mes, "");
+                if(dia>=10 && mes>=10) printf("%02d/%02d%5s", dia, mes, "");
+            }
             printf("%-15.2f%-15.2f%-15.2f%-15.0f%-15.0f%-17.0f%-15.2f\n",
                 vetorLogsGeral[i].distancia,
                 vetorLogsGeral[i].velocidadeMedia,
