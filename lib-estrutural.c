@@ -108,7 +108,7 @@ void ordenadorVetLogs(logs* vetor, int posIni, int posFim, int opcaoUser)
 bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes, int* tamVetBikes)
 {
     int i = 0, j, qntReduzir=0;
-    *tamVetBikes = 5;
+    *tamVetBikes = 1;
     *qntBikes = 1;
     bikes* bicicletas = malloc(sizeof(bikes)*(*tamVetBikes));
 
@@ -138,11 +138,19 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes, i
             bicicletas[j].ultimaPosicao = i-1;
             (*qntBikes)++;
             j++;
-            if(j > *tamVetBikes){
-                if (!(bicicletas = (bikes*) realloc(bicicletas, 2 * sizeof(bicicletas)))){
+            if(j >= *tamVetBikes){
+                (*tamVetBikes) += 1;
+                if (!(bicicletas = (bikes*) realloc(bicicletas, *tamVetBikes * sizeof(bikes)))){
                     perror("Nao foi possivel realocar memoria");
                     exit(1);
                 }
+                if (!(bicicletas[j].nome = malloc(sizeof(char) * 1000))){
+                    perror("Nao foi possivel alocar memoria");
+                    exit(1);
+                }
+                strcpy(bicicletas[j].nome, NOME_INI);
+                bicicletas[j].primeiraPosicao = -1;
+                bicicletas[j].ultimaPosicao = -1;
             }
             bicicletas[j].primeiraPosicao = i;
             if(sizeof(vetorLogsGeral[i].nome_bicicleta) > sizeof(bicicletas[i].nome)){
