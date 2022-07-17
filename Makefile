@@ -2,8 +2,8 @@ CFLAGS = -g -Wall -std=c99
 
 all: gps
 
-gps: gps.o lib-estrutural.o funcoes-auxiliares.o manipula-logs.o interacao-usuario.o
-	gcc gps.o lib-estrutural.o funcoes-auxiliares.o manipula-logs.o interacao-usuario.o -lm -o gps
+gps: gps.o lib-estrutural.o funcoes-auxiliares.o manipula-logs.o interacao-usuario.o plota-grafico.o
+	gcc gps.o lib-estrutural.o funcoes-auxiliares.o manipula-logs.o interacao-usuario.o plota-grafico.o -lm -o gps
 
 gps.o: gps.c lib-estrutural.h
 	gcc $(CFLAGS) -c gps.c
@@ -19,6 +19,9 @@ manipula-logs.o: manipula-logs.c manipula-logs.h
 
 interacao-usuario.o: interacao-usuario.c interacao-usuario.h
 	gcc $(CFLAGS) -c interacao-usuario.c
+
+plota-grafico.o: plota-grafico.c plota-grafico.h
+	gcc $(CFLAGS) -c plota-grafico.c
 
 clean:
 	-rm -f *.o *~ 

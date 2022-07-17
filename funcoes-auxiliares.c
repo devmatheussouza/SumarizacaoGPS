@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include "funcoes-auxiliares.h"
+#include "plota-grafico.h"
 
 // Verifica se entrada é um diretório ou não;
 int isDir(const char *fileName)

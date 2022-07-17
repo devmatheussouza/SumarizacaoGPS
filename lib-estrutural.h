@@ -23,14 +23,10 @@ void ordenadorVetLogs(logs *vetorLogsGeral, int posIni, int posFim, int opcaoUse
 void ordenaVetorLogsPorNome(logs *vetor, int tamanho);
 void inicializaVetorLogs(logs *vetorLogsGeral, int tamanhoVetor);
 bikes *preencheVetorBikes(logs *vetorLogsGeral, int tamVetLogs, int *qntBikes, int* tamVetBikes);
-int funcaoModeloBikeSwitchCase(bikes *vetBikes, int qntBikes);
 void printaSumarioPorBicicleta(logs* vetorLogsGeral, int posInicial, int posFim);
-void printaVetorLogs(logs *vetorLogsGeral, int qntLogs);
 void printAgrupadoPorBicicleta(logs *vetorLogsGeral, int tamIni, int tamFim, int opcaoUser);
 void printAtividadesBicicleta(logs *vetorLogsGeral, bikes* vetBikes, int qntBikes, int opcaoUser);
 void printaHistogramaPorBike(logs *vetorLogsGeral, int tamIni, int tamFim);
 void printaNomesBikes(bikes *vetBikes, int qntBikes);
-void plotaGrafico(logs* vetorLogsGeral, int posIni, int posFim);
-int maiorQntEmDeterminadoIntervaloDist(logs* vetorLogsGeral, int posIni, int posFim);
 void freeVetorLogs(logs* vetor, int qntLogs);
 void freeVetorBikes(bikes* vetor, int tamVetBikes);

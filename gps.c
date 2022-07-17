@@ -8,7 +8,7 @@
 #include <string.h>
 #include <strings.h>
 #include <math.h>
-#include "interacao-usuario.h"
+#include "plota-grafico.h"
 
 int main(int argc, char **argv)
 {

@@ -7,7 +7,31 @@
 #include <string.h>
 #include <strings.h>
 #include <math.h>
-#include "interacao-usuario.h"
+#include "plota-grafico.h"
+
+int funcaoModeloBikeSwitchCase(bikes* vetBikes, int qntBikes)
+{
+    int i, modeloEscolhido;
+    printf("\n");
+    printf("Qual modelo? \n");
+    printf("\n");
+    for(i=0; i<qntBikes; i++){
+        // Verifica se tem '\n' como último char; Se tiver, retira;
+        if(strchr(vetBikes[i].nome, '\n') != NULL){
+            vetBikes[i].nome[strlen(vetBikes[i].nome) - 1] = 0;
+        }
+        printf("%d) %s \n", i+1, vetBikes[i].nome);
+    }
+    printf("\n");
+    printf("Digite um valor: ");
+    scanf("%d", &modeloEscolhido);
+    while(modeloEscolhido < 1 || modeloEscolhido > qntBikes){
+        printf("Digite um valor valido.\n");
+        scanf("%d", &modeloEscolhido);
+    }
+    printf("\n");
+    return modeloEscolhido;
+}
 
 void interacaoResultadosComUsuario(logs* vetorLogsGeral, bikes* vetBikes, int qntBikes, int qntLogs)
 {

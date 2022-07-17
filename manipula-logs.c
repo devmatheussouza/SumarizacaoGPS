@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include "interacao-usuario.h"
+#include "plota-grafico.h"
 
 #define NOME_INI "~"
 #define LINESIZE 1024
