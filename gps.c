@@ -8,7 +8,7 @@
 #include <string.h>
 #include <strings.h>
 #include <math.h>
-#include "funcoes-auxiliares.h"
+#include "interacao-usuario.h"
 
 int main(int argc, char **argv)
 {
@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     char *caminho = argv[2];
     logs *vetorLogsGeral;
     bikes *vetBikes;
-    int qntBikes, qntLogs; 
+    int qntBikes, qntLogs, tamVetBikes;
 
     if (caminho[strlen(caminho) - 1] != '/')
         strcat(caminho, "/");
@@ -39,13 +39,13 @@ int main(int argc, char **argv)
 
     ordenaVetorLogsPorNome(vetorLogsGeral, qntLogs);
     
-    vetBikes = preencheVetorBikes(vetorLogsGeral, qntLogs, &qntBikes);
+    vetBikes = preencheVetorBikes(vetorLogsGeral, qntLogs, &qntBikes, &tamVetBikes);
 
     interacaoResultadosComUsuario(vetorLogsGeral, vetBikes, qntBikes, qntLogs);
 
-    freeVetorLogs(vetorLogsGeral);
+    freeVetorLogs(vetorLogsGeral, qntLogs);
 
-    freeVetorBikes(vetBikes);
+    freeVetorBikes(vetBikes, tamVetBikes);
 
     (void)closedir(dirStream);
     return 0;

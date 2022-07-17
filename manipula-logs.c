@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include "funcoes-auxiliares.h"
+#include "interacao-usuario.h"
 
 #define NOME_INI "~"
 #define LINESIZE 1024
@@ -75,6 +75,12 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
 
                 if (strcmp(ptr_string, "Gear") == 0){
                     ptr_string = strtok(NULL, "");
+                    if(sizeof(ptr_string) > sizeof(vetorLogsGeral[i].nome_bicicleta)){
+                        if (!(vetorLogsGeral[i].nome_bicicleta = (char*) realloc(vetorLogsGeral[i].nome_bicicleta, 2 * sizeof(vetorLogsGeral[i].nome_bicicleta)))){
+                            perror("Nao foi possivel realocar memoria");
+                            exit(1);
+                        }
+                    }
                     strcpy(vetorLogsGeral[i].nome_bicicleta, ptr_string + 1);
                     continue;
                 }

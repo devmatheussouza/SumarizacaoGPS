@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include "funcoes-auxiliares.h"
 #include <math.h>
+#include "interacao-usuario.h"
 
 #define NOME_INI "~"
 #define NUM_COMMANDS 8
@@ -17,6 +17,14 @@ void inicializaVetorLogs(logs *vetorLogsGeral, int tamanhoVetor)
 {
     int i;
     for (i = 0; i < tamanhoVetor; i++){
+        if (!(vetorLogsGeral[i].nome_bicicleta = malloc(sizeof(char)*1000))){
+            perror("Nao foi possivel alocar memoria");
+            exit(1);
+        }
+        if (!(vetorLogsGeral[i].nome_arquivo = malloc(sizeof(char)*1000))){
+            perror("Nao foi possivel alocar memoria");
+            exit(1);
+        }
         strcpy(vetorLogsGeral[i].nome_bicicleta, NOME_INI);
         strcpy(vetorLogsGeral[i].nome_arquivo, NOME_INI);
         strcpy(vetorLogsGeral[i].data_atividade, NOME_INI);
@@ -97,14 +105,19 @@ void ordenadorVetLogs(logs* vetor, int posIni, int posFim, int opcaoUser)
     }
 }
 
-bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
+bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes, int* tamVetBikes)
 {
-    int i = 0, j, tamInicial = 10, qntReduzir=0;
+    int i = 0, j, qntReduzir=0;
+    *tamVetBikes = 5;
     *qntBikes = 1;
-    bikes* bicicletas = malloc(sizeof(bikes)*tamInicial);
+    bikes* bicicletas = malloc(sizeof(bikes)*(*tamVetBikes));
 
     // Inicializa vetor de bikes;
-    for(i=0; i<tamInicial; i++){
+    for(i=0; i<*tamVetBikes; i++){
+        if (!(bicicletas[i].nome = malloc(sizeof(char) * 1000))){
+            perror("Nao foi possivel alocar memoria");
+            exit(1);
+        }
         strcpy(bicicletas[i].nome, NOME_INI);
         bicicletas[i].primeiraPosicao = -1;
         bicicletas[i].ultimaPosicao = -1;
@@ -125,13 +138,19 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
             bicicletas[j].ultimaPosicao = i-1;
             (*qntBikes)++;
             j++;
-            if(j > tamInicial){
+            if(j > *tamVetBikes){
                 if (!(bicicletas = (bikes*) realloc(bicicletas, 2 * sizeof(bicicletas)))){
                     perror("Nao foi possivel realocar memoria");
                     exit(1);
                 }
             }
             bicicletas[j].primeiraPosicao = i;
+            if(sizeof(vetorLogsGeral[i].nome_bicicleta) > sizeof(bicicletas[i].nome)){
+                if (!(bicicletas[i].nome = (char*) realloc(bicicletas[i].nome, 2 * sizeof(bicicletas[i].nome)))){
+                    perror("Nao foi possivel realocar memoria");
+                    exit(1);
+                }
+            }
             strcpy(bicicletas[j].nome, vetorLogsGeral[i].nome_bicicleta);
         }
         i++;
@@ -375,10 +394,19 @@ void plotaGrafico(logs* vetorLogsGeral, int posIni, int posFim){
     fclose(linhaComandoPlot);
 }
 
-void freeVetorLogs(logs* vetor){
+void freeVetorLogs(logs* vetor, int qntLogs){
+    int i;
+    for(i=0; i<qntLogs; i++){
+        free(vetor[i].nome_bicicleta);
+        free(vetor[i].nome_arquivo);
+    }
     free(vetor);
 }
 
-void freeVetorBikes(bikes* vetor){
+void freeVetorBikes(bikes* vetor, int qntBikes){
+    int i;
+    for(i=0; i<qntBikes; i++){
+        free(vetor[i].nome);
+    }
     free(vetor);
 }

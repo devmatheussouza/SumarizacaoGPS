@@ -1,15 +1,15 @@
 typedef struct
 {
-    char nome[100];
+    char* nome;
     int primeiraPosicao;
     int ultimaPosicao;
 } bikes;
 
 typedef struct
 {
-    char nome_bicicleta[100];
-    char data_atividade[100];
-    char nome_arquivo[100];
+    char* nome_bicicleta;
+    char data_atividade[50];
+    char* nome_arquivo;
     float distancia;
     float velocidadeMaxima;
     float velocidadeMedia;
@@ -22,7 +22,7 @@ typedef struct
 void ordenadorVetLogs(logs *vetorLogsGeral, int posIni, int posFim, int opcaoUser);
 void ordenaVetorLogsPorNome(logs *vetor, int tamanho);
 void inicializaVetorLogs(logs *vetorLogsGeral, int tamanhoVetor);
-bikes *preencheVetorBikes(logs *vetorLogsGeral, int tamVetLogs, int *qntBikes);
+bikes *preencheVetorBikes(logs *vetorLogsGeral, int tamVetLogs, int *qntBikes, int* tamVetBikes);
 int funcaoModeloBikeSwitchCase(bikes *vetBikes, int qntBikes);
 void printaSumarioPorBicicleta(logs* vetorLogsGeral, int posInicial, int posFim);
 void printaVetorLogs(logs *vetorLogsGeral, int qntLogs);
@@ -32,5 +32,5 @@ void printaHistogramaPorBike(logs *vetorLogsGeral, int tamIni, int tamFim);
 void printaNomesBikes(bikes *vetBikes, int qntBikes);
 void plotaGrafico(logs* vetorLogsGeral, int posIni, int posFim);
 int maiorQntEmDeterminadoIntervaloDist(logs* vetorLogsGeral, int posIni, int posFim);
-void freeVetorLogs(logs* vetor);
-void freeVetorBikes(bikes* vetor);
+void freeVetorLogs(logs* vetor, int qntLogs);
+void freeVetorBikes(bikes* vetor, int tamVetBikes);
