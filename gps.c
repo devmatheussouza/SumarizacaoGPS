@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include "funcoes-auxiliares.h"
 #include <math.h>
+#include "funcoes-auxiliares.h"
 
 int main(int argc, char **argv)
 {
@@ -35,10 +35,10 @@ int main(int argc, char **argv)
 
     inicializaVetorLogs(vetorLogsGeral, qntLogs);
 
-    manipulaArquivosLog(dirStream, caminho, vetorLogsGeral, &qntLogs);
+    manipulaArquivosLog(dirStream, caminho, vetorLogsGeral, qntLogs);
 
     ordenaVetorLogsPorNome(vetorLogsGeral, qntLogs);
-
+    
     vetBikes = preencheVetorBikes(vetorLogsGeral, qntLogs, &qntBikes);
 
     interacaoResultadosComUsuario(vetorLogsGeral, vetBikes, qntBikes, qntLogs);

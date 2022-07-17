@@ -21,9 +21,6 @@ typedef struct
 
 void ordenadorVetLogs(logs *vetorLogsGeral, int posIni, int posFim, int opcaoUser);
 void ordenaVetorLogsPorNome(logs *vetor, int tamanho);
-// void ordenaAtividadesBicicletaPorData(logs *vetor, int tamIni, int tamFim);
-// void ordenaAtividadesBicicletaPorDistancia(logs *vetor, int tamIni, int tamFim);
-// void ordenaAtividadesBicicletaPorSubidaAcumulada(logs *vetor, int tamIni, int tamFim);
 void inicializaVetorLogs(logs *vetorLogsGeral, int tamanhoVetor);
 bikes *preencheVetorBikes(logs *vetorLogsGeral, int tamVetLogs, int *qntBikes);
 int funcaoModeloBikeSwitchCase(bikes *vetBikes, int qntBikes);

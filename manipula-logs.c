@@ -11,7 +11,7 @@
 #define NOME_INI "~"
 #define LINESIZE 1024
 
-void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, int* qntLogs)
+void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, int qntLogs)
 {
     char line[LINESIZE + 1];
     struct dirent *dirEntry;
@@ -48,7 +48,11 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
 
         // Se for arquivo, entra no escopo do if;
         if (isDir(caminhoMaisNomeArquivo) != 0){
-            printf("Lendo arquivos de log, aguarde... [%.2f%s]\n", (((float) i) / ((float) *qntLogs))*100, "%");
+            if((((float) i) / ((float) qntLogs))*100 >= 100){
+                printf("Finalizando leitura...\n");
+            } else {
+                printf("Lendo arquivos de log, aguarde... [%.2f%s]\n", (((float) i) / ((float) qntLogs))*100, "%");
+            }
             arq = fopen(caminhoMaisNomeArquivo, "r");
             if (!arq){
                 perror("Erro ao abrir arquivo.\n");
@@ -77,10 +81,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
 
                 /* Se passar da parte do Gear sem ter atribuído o nome da bike,
                     é realizado um break, pois não é um arquivo de log */
-                if (strcmp(vetorLogsGeral[i].nome_bicicleta, NOME_INI) == 0){
-                    (*qntLogs)--;
-                    break;
-                }
+                if (strcmp(vetorLogsGeral[i].nome_bicicleta, NOME_INI) == 0) break;
 
                 /* Cópia do primeiro horário do arquivo de log */
                 if (strcmp(ptr_string, "Date") == 0 && strcmp(vetorLogsGeral[i].data_atividade, NOME_INI) == 0){
@@ -112,7 +113,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
                 // Atribuição da primeira cadência
                 if (strcmp(ptr_string, "cadence") == 0 && resCD < 0){
                     ptr_string = strtok(NULL, " ");
-                    if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0)
+                    if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0 || strcmp(ptr_string, " ") == 0)
                         resCD = 0;
                     else
                         resCD = atof(ptr_string);
@@ -121,7 +122,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
 
                 if (strcmp(ptr_string, "cadence") == 0){
                     ptr_string = strtok(NULL, " ");
-                    if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0)
+                    if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0 || strcmp(ptr_string, " ") == 0)
                         resCD_At = 0;
                     else
                         resCD_At = atof(ptr_string);
@@ -144,7 +145,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
                 // Atribuição do primeiro HR
                 if (strcmp(ptr_string, "heart_rate") == 0 && resHR < 0){
                     ptr_string = strtok(NULL, " ");
-                    if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0)
+                    if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0 || strcmp(ptr_string, " ") == 0)
                         resHR = 0;
                     else
                         resHR = atof(ptr_string);
@@ -156,7 +157,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
 
                 if (strcmp(ptr_string, "heart_rate") == 0){
                     ptr_string = strtok(NULL, " ");
-                    if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0)
+                    if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0 || strcmp(ptr_string, " ") == 0)
                         resHR_At = 0;
                     else
                         resHR_At = atof(ptr_string);
@@ -169,7 +170,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
                 // Atribuição da primeira velocidade
                 if (strcmp(ptr_string, "speed") == 0 && resV < 0){
                     ptr_string = strtok(NULL, " ");
-                    if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0){
+                    if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0 || strcmp(ptr_string, " ") == 0){
                         resV = 0;
                     } else {
                         resV = atof(ptr_string) * 3.6;
@@ -181,7 +182,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
 
                 if (strcmp(ptr_string, "speed") == 0){
                     ptr_string = strtok(NULL, " ");
-                    if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0){
+                    if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0 || strcmp(ptr_string, " ") == 0){
                         resV_At = 0;
                     } else {
                         resV_At = atof(ptr_string) * 3.6;
@@ -250,80 +251,4 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
     free(caminhoMaisNomeArquivo);
     free(nomeDoArquivo);
 
-}
-
-void interacaoResultadosComUsuario(logs* vetorLogsGeral, bikes* vetBikes, int qntBikes, int qntLogs)
-{
-    int opcaoUser, modeloEscolhido;
-    opcaoUser = 1;
-    while (opcaoUser != 0)
-    {
-        printf("Digite um numero para realizar uma das seguintes funcoes:\n\n");
-        printf("1) Mostrar modelos de bike encontrados\n");
-        printf("2) Escolher um modelo de bike e ver atividades\n");
-        printf("3) Listar todas atividades agrupadas por bicicleta e ordenadas pela data\n");
-        printf("4) Listar todas atividades agrupadas por bicicleta e ordenadas pela distancia\n");
-        printf("5) Listar todas atividades ordenadas pela subida acumulada\n");
-        printf("6) Escolher um modelo de bike e mostrar um histograma da distribuicao das distancias\n");
-        printf("7) Escolher um modelo de bike e plotar um grafico da distribuicao das distancias\n");
-        printf("0) Sair \n");
-        printf("\n");
-        printf("Acao desejada: ");
-        scanf("%d", &opcaoUser);
-        switch (opcaoUser)
-        {
-        case 0:
-            printf("\n");
-            printf("Até mais\n");
-            break;
-
-        case 1:
-            printaNomesBikes(vetBikes, qntBikes);
-            break;
-
-        case 2:
-            modeloEscolhido = funcaoModeloBikeSwitchCase(vetBikes, qntBikes);
-            printAgrupadoPorBicicleta(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao, opcaoUser);
-            printaSumarioPorBicicleta(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
-            printf("\n");
-            break;
-
-        case 3:
-            printAtividadesBicicleta(vetorLogsGeral, vetBikes, qntBikes, opcaoUser);
-            printf("\n");
-            break;
-
-        case 4:
-            printAtividadesBicicleta(vetorLogsGeral, vetBikes, qntBikes, opcaoUser);
-            printf("\n");
-            break;
-
-        case 5:
-            // ordenaAtividadesBicicletaPorSubidaAcumulada(vetorLogsGeral, 0, qntLogs-1);
-            ordenadorVetLogs(vetorLogsGeral, 0, qntLogs-1, opcaoUser);
-            printAgrupadoPorBicicleta(vetorLogsGeral, 0, qntLogs-1, opcaoUser);
-            ordenaVetorLogsPorNome(vetorLogsGeral, qntLogs);
-            printf("\n");
-            break;
-
-        case 6:
-            modeloEscolhido = funcaoModeloBikeSwitchCase(vetBikes, qntBikes);
-            // ordenaAtividadesBicicletaPorDistancia(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
-            ordenadorVetLogs(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao, opcaoUser);
-            printaHistogramaPorBike(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
-            printf("\n");
-            break;
-
-        case 7: 
-            modeloEscolhido = funcaoModeloBikeSwitchCase(vetBikes, qntBikes);
-            // ordenaAtividadesBicicletaPorDistancia(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
-            ordenadorVetLogs(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao, opcaoUser);
-            plotaGrafico(vetorLogsGeral, vetBikes[modeloEscolhido - 1].primeiraPosicao, vetBikes[modeloEscolhido - 1].ultimaPosicao);
-            printf("\n");
-
-        default:
-            printf("Digite um numero valido!\n");
-            break;
-        }
-    }
 }

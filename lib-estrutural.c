@@ -11,7 +11,7 @@
 #include <math.h>
 
 #define NOME_INI "~"
-#define NUM_COMMANDS 9
+#define NUM_COMMANDS 8
 
 void inicializaVetorLogs(logs *vetorLogsGeral, int tamanhoVetor)
 {
@@ -137,7 +137,6 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes)
         i++;
     }
     bicicletas[j].ultimaPosicao = i-1-qntReduzir;
-
     return bicicletas;
 }
 
@@ -146,35 +145,39 @@ void printAgrupadoPorBicicleta(logs *vetorLogsGeral, int tamIni, int tamFim, int
     int i, dia, mes, ano;
     if(opcaoUser == 5){
         printf("\nLista de todas atividades ordenadas por subida acumulada\n\n");
+        printf("%-22s", "BICICLETA");
     } else {
         printf("Bicicleta: %s\n", vetorLogsGeral[tamIni].nome_bicicleta);
     }
-    printf("%-10s%-20s%-20s%-20s%-20s%-20s%-20s%-20s\n",
+    printf("%-10s%-15s%-15s%-15s%-15s%-15s%-17s%-15s\n",
         "DATA",
         "DISTANCIA(KM)",
         "V. MEDIA(KM/H)",
         "V. MAX(KM/H)",
         "HR MEDIO(BPM)",
         "HR MAX(BPM)",
-        "CAD. MEDIA(BPM)",
+        "CAD. MEDIA(RPM)",
         "SUB. ACUMULADA(M)");
     
     for(i=tamIni; i<=tamFim; i++){
-        if(strchr(vetorLogsGeral[i].nome_bicicleta, '\n') != NULL)
-            vetorLogsGeral[i].nome_bicicleta[strlen(vetorLogsGeral[i].nome_bicicleta) - 1] = 0;
-        sscanf(vetorLogsGeral[i].data_atividade, "%d-%d-%d", &ano, &mes, &dia);
-        if(dia<10 && mes<10) printf("%d/%-8d", dia, mes);
-        if(dia<10 && mes>=10) printf("%d/%-8d", dia, mes);
-        if(dia>=10 && mes<10) printf("%d/%-7d", dia, mes);
-        if(dia>=10 && mes>=10) printf("%d/%-7d", dia, mes);
-        printf("%-20.2f%-20.2f%-20.2f%-20.0f%-20.0f%-20.0f%-20.2f\n",
-               vetorLogsGeral[i].distancia,
-               vetorLogsGeral[i].velocidadeMedia,
-               vetorLogsGeral[i].velocidadeMaxima,
-               vetorLogsGeral[i].heartRateMedio,
-               vetorLogsGeral[i].heartRateMaximo,
-               vetorLogsGeral[i].cadenciaMedia,
-               vetorLogsGeral[i].subidaAcumulada);
+        if(strcmp(vetorLogsGeral[i].nome_bicicleta, NOME_INI) !=0){
+            if(strchr(vetorLogsGeral[i].nome_bicicleta, '\n') != NULL)
+                vetorLogsGeral[i].nome_bicicleta[strlen(vetorLogsGeral[i].nome_bicicleta) - 1] = 0;
+            if(opcaoUser==5) printf("%-22s", vetorLogsGeral[i].nome_bicicleta);
+            sscanf(vetorLogsGeral[i].data_atividade, "%d-%d-%d", &ano, &mes, &dia);
+            if(dia<10 && mes<10) printf("%02d/%02d%5s", dia, mes, "");
+            if(dia<10 && mes>=10) printf("%02d/%02d%5s", dia, mes, "");
+            if(dia>=10 && mes<10) printf("%02d/%02d%5s", dia, mes, "");
+            if(dia>=10 && mes>=10) printf("%02d/%02d%5s", dia, mes, "");
+            printf("%-15.2f%-15.2f%-15.2f%-15.0f%-15.0f%-17.0f%-15.2f\n",
+                vetorLogsGeral[i].distancia,
+                vetorLogsGeral[i].velocidadeMedia,
+                vetorLogsGeral[i].velocidadeMaxima,
+                vetorLogsGeral[i].heartRateMedio,
+                vetorLogsGeral[i].heartRateMaximo,
+                vetorLogsGeral[i].cadenciaMedia,
+                vetorLogsGeral[i].subidaAcumulada);
+        }
     }
 }
 
@@ -322,24 +325,32 @@ int maiorQntEmDeterminadoIntervaloDist(logs* vetorLogsGeral, int posIni, int pos
 
 void plotaGrafico(logs* vetorLogsGeral, int posIni, int posFim){
     int i, menorDistLog, menorDistHist, maiorDistLog, maiorDistHist,  qnt, maiorQnt;
-    char commandsForGnuplot[NUM_COMMANDS][200] = {"set title \"Histograma\"", 
-    "set yrange [0:*] reverse",
-    "set style fill solid", 
+    char commandsPopen[NUM_COMMANDS][200] = {"set title \"Histograma\"", 
     "set xlabel \"Quantidade\"",
     "set ylabel \"Distância(KM)\"",
-    "unset key",
-    "myBoxWidth = 0.6",
-    "set offsets 0,0,0.5-myBoxWidth/2,0.5",
-     "plot '-' using (column(2)):(column(0)):(0):(column(2)):($0-myBoxWidth/2):($0+myBoxWidth/2.):($0+2):ytic(1) with boxxyerror lc var"};
+    "set yrange [0:*] reverse",
+    "set style fill solid", // Adiciona cor à barra;
+    "unset key", // Não printa as configurações usadas para plotar o gráfico;
+    "set offsets 0,0,0.2,0.5",  // espaços vazios left, right, top, bottom;
+     "plot '-' using (column(2)):(column(0)):(0):(column(2)):($0-0.3):($0+0.3):ytic(1) with boxxyerror lc 1"};
+     // plot '-': plotar na linha de comando do gnuplot; 
+     // columns referem-se aos dados lançados diretamente na linha de comando;
+     /* column(0): refere-se ao centro da barra no eixo y.
+        Além disso, gera números crescentes (a partir do zero) em cada ponto do gráfico; */
+     // column(1): intervalos de distância;
+     // column(2): quantidade de distâncias dentro do intervalo;
+     // (0): origem do gráfico;
+     // ($0-0.3) e ($0+0.3) referem-se à largura da barra (tem como referência o centro da barra no eixo y);
+     // ytic(1) pega os dados da primeira coluna (intervalos de distância);
 
-    FILE * gnuplotPipe = popen ("gnuplot -persist", "w");
+    FILE * linhaComandoPlot = popen ("gnuplot -persist", "w");
 
     maiorQnt = maiorQntEmDeterminadoIntervaloDist(vetorLogsGeral, posIni, posFim);
     
-    fprintf(gnuplotPipe, "set xrange [0:%d]\n", maiorQnt+1);
+    fprintf(linhaComandoPlot, "set xrange [0:%d]\n", maiorQnt+1);
 
     for (i=0; i < NUM_COMMANDS; i++)
-        fprintf(gnuplotPipe, "%s\n", commandsForGnuplot[i]); 
+        fprintf(linhaComandoPlot, "%s\n", commandsPopen[i]); 
 
     menorDistLog = (int) vetorLogsGeral[posIni].distancia;
     maiorDistLog = (int) vetorLogsGeral[posFim].distancia;
@@ -355,12 +366,13 @@ void plotaGrafico(logs* vetorLogsGeral, int posIni, int posFim){
             if(i == posFim) break;
             i++;
         }
-        fprintf(gnuplotPipe, "%d-%d\t%d\n", menorDistHist, menorDistHist+9, qnt);
+        fprintf(linhaComandoPlot, "%d-%d\t%d\n", menorDistHist, menorDistHist+9, qnt);
         menorDistHist += 10;
     }
 
-    fprintf(gnuplotPipe, "e\n");
-    fclose(gnuplotPipe);
+    fprintf(linhaComandoPlot, "e\n");
+
+    fclose(linhaComandoPlot);
 }
 
 void freeVetorLogs(logs* vetor){

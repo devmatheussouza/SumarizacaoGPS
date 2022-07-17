@@ -1,4 +1,3 @@
-#include <dirent.h>
 #include "manipula-logs.h"
 
 int diferencaEntreDoisTimestamps(char *timestampAnterior, char *timestampAtual);
