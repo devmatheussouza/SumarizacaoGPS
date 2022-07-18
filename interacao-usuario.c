@@ -9,6 +9,7 @@
 #include <math.h>
 #include "plota-grafico.h"
 
+// Modularizacao de uma parte que repete no switch case;
 int funcaoModeloBikeSwitchCase(bikes* vetBikes, int qntBikes)
 {
     int i, modeloEscolhido;

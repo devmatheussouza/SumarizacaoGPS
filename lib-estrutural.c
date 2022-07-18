@@ -37,6 +37,7 @@ void inicializaVetorLogs(logs *vetorLogsGeral, int tamanhoVetor)
     }
 }
 
+// Ordena vetor de logs por nome;
 void ordenaVetorLogsPorNome(logs *vetor, int tamanho)
 {
     int i, j;
@@ -53,11 +54,13 @@ void ordenaVetorLogsPorNome(logs *vetor, int tamanho)
     }
 }
 
+// Ordena vetor de logs de acordo com opcao do usuario;
 void ordenadorVetLogs(logs* vetor, int posIni, int posFim, int opcaoUser)
 {
     int i, j, indexMenor;
     logs aux;
 
+    // Por data;
     if(opcaoUser == 3){
         for(i=posIni; i<posFim; i++){
             indexMenor = i;
@@ -73,6 +76,7 @@ void ordenadorVetLogs(logs* vetor, int posIni, int posFim, int opcaoUser)
         }
     }
 
+    // Por distancia;
     if(opcaoUser == 4 || opcaoUser == 6 || opcaoUser == 7){
         for(i=posIni; i<posFim; i++){
             indexMenor = i;
@@ -88,6 +92,7 @@ void ordenadorVetLogs(logs* vetor, int posIni, int posFim, int opcaoUser)
         }
     }
 
+    // Por subida acumulada;
     if(opcaoUser == 5){
         for(i=posIni; i<posFim; i++){
             indexMenor = i;
@@ -104,6 +109,7 @@ void ordenadorVetLogs(logs* vetor, int posIni, int posFim, int opcaoUser)
     }
 }
 
+// Preenche um vetor de bikes de acordo com as bikes encontradas no vetor de logs;
 bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes, int* tamVetBikes)
 {
     int i = 0, j, qntReduzir=0;
@@ -130,13 +136,16 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes, i
     /* Verifica quantas bikes têm no vetor de logs e preenche o vetor de bikes com nome e 
         posicão inicial e final (no vetor de logs) de determinada bicicleta */
     while(i < tamVetLogs){
+        // Caso nao seja um arquivo de log;
         if(strcmp(vetorLogsGeral[i].nome_bicicleta, NOME_INI) == 0){
             qntReduzir++;
         }
+        // Se nome da bicicleta encontrada for diferente da anterior, adiciona no vetor de bikes;
         if(strcmp(bicicletas[j].nome, vetorLogsGeral[i].nome_bicicleta) != 0 && strcmp(vetorLogsGeral[i].nome_bicicleta, NOME_INI) != 0){
             bicicletas[j].ultimaPosicao = i-1;
             (*qntBikes)++;
             j++;
+            // Realloca vetor de bikes caso numero de bikes for maior;
             if(j >= *tamVetBikes){
                 (*tamVetBikes) += 1;
                 if (!(bicicletas = (bikes*) realloc(bicicletas, *tamVetBikes * sizeof(bikes)))){
@@ -152,12 +161,7 @@ bikes* preencheVetorBikes(logs* vetorLogsGeral, int tamVetLogs, int* qntBikes, i
                 bicicletas[j].ultimaPosicao = -1;
             }
             bicicletas[j].primeiraPosicao = i;
-            if(sizeof(vetorLogsGeral[i].nome_bicicleta) > sizeof(bicicletas[i].nome)){
-                if (!(bicicletas[i].nome = (char*) realloc(bicicletas[i].nome, 2 * sizeof(bicicletas[i].nome)))){
-                    perror("Nao foi possivel realocar memoria");
-                    exit(1);
-                }
-            }
+            
             strcpy(bicicletas[j].nome, vetorLogsGeral[i].nome_bicicleta);
         }
         i++;
@@ -214,9 +218,11 @@ void printAgrupadoPorBicicleta(logs *vetorLogsGeral, int tamIni, int tamFim, int
 void printaHistogramaPorBike(logs *vetorLogsGeral, int posIni, int posFim)
 {
     int menorDistLog, menorDistHist, maiorDistLog, maiorDistHist, i;
+
     // Pega-se a menor e a maior distância e faz-se um casting para adotar um intervalo de inteiros;
     menorDistLog = (int) vetorLogsGeral[posIni].distancia;
     maiorDistLog = (int) vetorLogsGeral[posFim].distancia;
+
     /* Subtrai-se o último dígito para adotar um intervalo de 10 em 10; 
         Exemplo: menorDistLog = 125, entao menorDistHist = 120; */
     menorDistHist = menorDistLog - (menorDistLog % 10);
@@ -291,6 +297,7 @@ void printAtividadesBicicleta(logs *vetorLogsGeral, bikes* vetBikes, int qntBike
 {
     int j=0, tamIni, tamFim;
 
+    // Printa atividades de todas as bikes;
     while(j<qntBikes){
         tamIni = vetBikes[j].primeiraPosicao;
         tamFim = vetBikes[j].ultimaPosicao;

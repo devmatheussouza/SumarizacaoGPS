@@ -18,6 +18,7 @@ int main(int argc, char **argv)
     bikes *vetBikes;
     int qntBikes, qntLogs, tamVetBikes;
 
+    // Se nao tiver a barra no final da string, coloca;
     if (caminho[strlen(caminho) - 1] != '/')
         strcat(caminho, "/");
 
@@ -26,6 +27,7 @@ int main(int argc, char **argv)
         exit(1);
     }
 
+    // Varredura no diretorio para saber quantos logs tem;
     qntLogs = verificaQntArquivosEmDiretorio(dirStream, caminho);
     
     if (!(vetorLogsGeral = malloc(sizeof(logs) * qntLogs))){

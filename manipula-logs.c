@@ -43,6 +43,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
 
         strcpy(caminhoMaisNomeArquivo, caminho);
         strcpy(nomeDoArquivo, dirEntry->d_name);
+
         // Concatena caminho do diretório com o nome do arquivo;
         strcat(caminhoMaisNomeArquivo, nomeDoArquivo);
 
@@ -53,6 +54,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
             } else {
                 printf("Lendo arquivos de log, aguarde... [%.2f%s]\n", (((float) i) / ((float) qntLogs))*100, "%");
             }
+
             arq = fopen(caminhoMaisNomeArquivo, "r");
             if (!arq){
                 perror("Erro ao abrir arquivo.\n");
@@ -75,12 +77,6 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
 
                 if (strcmp(ptr_string, "Gear") == 0){
                     ptr_string = strtok(NULL, "");
-                    if(sizeof(ptr_string) > sizeof(vetorLogsGeral[i].nome_bicicleta)){
-                        if (!(vetorLogsGeral[i].nome_bicicleta = (char*) realloc(vetorLogsGeral[i].nome_bicicleta, 2 * sizeof(vetorLogsGeral[i].nome_bicicleta)))){
-                            perror("Nao foi possivel realocar memoria");
-                            exit(1);
-                        }
-                    }
                     strcpy(vetorLogsGeral[i].nome_bicicleta, ptr_string + 1);
                     continue;
                 }
@@ -107,6 +103,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
                     continue;
                 }
 
+                // Atribuicao das demais altitudes
                 if (strcmp(ptr_string, "altitude") == 0){
                     ptr_string = strtok(NULL, " ");
                     resultado = atof(ptr_string);
@@ -126,6 +123,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
                     continue;
                 }
 
+                // Atribuicao das demais cadencias
                 if (strcmp(ptr_string, "cadence") == 0){
                     ptr_string = strtok(NULL, " ");
                     if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0 || strcmp(ptr_string, " ") == 0)
@@ -142,6 +140,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
                     continue;
                 }
 
+                // Atribuicao das demais distancias
                 if (strcmp(ptr_string, "distance") == 0){
                     ptr_string = strtok(NULL, " ");
                     vetorLogsGeral[i].distancia = atof(ptr_string);
@@ -161,6 +160,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
                     continue;
                 }
 
+                // Atribuicao dos demais HR 
                 if (strcmp(ptr_string, "heart_rate") == 0){
                     ptr_string = strtok(NULL, " ");
                     if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0 || strcmp(ptr_string, " ") == 0)
@@ -186,6 +186,7 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
                     continue;
                 }
 
+                // Atribuicao das demais velocidades
                 if (strcmp(ptr_string, "speed") == 0){
                     ptr_string = strtok(NULL, " ");
                     if (strcmp(ptr_string, "None") == 0 || strcmp(ptr_string, "") == 0 || strcmp(ptr_string, " ") == 0){
@@ -198,14 +199,14 @@ void manipulaArquivosLog(DIR* dirStream, char* caminho, logs* vetorLogsGeral, in
                     continue;
                 }
 
-                // Cópia da data do log
+                // Pega data do log
                 if (strcmp(ptr_string, "timestamp") == 0 && (strcmp(vetorLogsGeral[i].data_atividade, NOME_INI) == 0)){
                     ptr_string = strtok(NULL, " ");
                     strcpy(vetorLogsGeral[i].data_atividade, ptr_string);
                     continue;
                 }
 
-
+                // Bloco voltado para os pesos na media ponderada;
                 if (strcmp(ptr_string, "timestamp") == 0){
                     ptr_string = strtok(NULL, " ");
                     ptr_string = strtok(NULL, " ");

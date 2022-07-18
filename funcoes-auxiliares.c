@@ -16,6 +16,7 @@ int isDir(const char *fileName)
     return S_ISREG(path.st_mode);
 }
 
+// Faz a diferenca entre 2 timestamps e retorna o tempo em segundos;
 int diferencaEntreDoisTimestamps(char *timestampAnterior, char *timestampAtual)
 {
     int h, m, s;
@@ -33,14 +34,18 @@ int verificaQntArquivosEmDiretorio(DIR *dirStream, char *caminhoDiretorio)
     int qntFiles = 0;
     struct dirent *dirEntry;
     char *caminhoMaisNomeArquivo, *nomeDoArquivo;
+
     if (!(caminhoMaisNomeArquivo = malloc(sizeof(char) * 1000))){
         perror("Nao foi possivel alocar memoria");
         exit(1);
     }
+
     if (!(nomeDoArquivo = malloc(sizeof(char) * 200))){
         perror("Nao foi possivel alocar memoria");
         exit(1);
     }
+
+    // percorre o diretorio e acumula quantidade de arquivos;
     for (;;){
         if (!(dirEntry = readdir(dirStream))) break;
         strcpy(caminhoMaisNomeArquivo, caminhoDiretorio);
@@ -51,6 +56,7 @@ int verificaQntArquivosEmDiretorio(DIR *dirStream, char *caminhoDiretorio)
             qntFiles++;
         }
     }
+    // Reseta a posicao de uma stream de diretorio para o inicio do diretorio;
     rewinddir(dirStream);
     free(caminhoMaisNomeArquivo);
     free(nomeDoArquivo);
