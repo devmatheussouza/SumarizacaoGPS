@@ -1,4 +1,4 @@
-CFLAGS = -g -Wall -std=c99
+CFLAGS = -g -std=c99
 
 all: gps
 
